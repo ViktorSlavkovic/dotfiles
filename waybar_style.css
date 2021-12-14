@@ -50,11 +50,7 @@ window#waybar {
   background: rgba(0, 0, 0, 0.8);
 }
 
-#custom-clock,
-#custom-clock-lon,
-#custom-clock-srb,
-#custom-clock-mtw,
-#custom-clock-nyc {
+#clock {
   padding-left: 0.4em;
   padding-right: 0.4em;
   margin-left: 0.4em;
@@ -89,13 +85,13 @@ window#waybar {
   font-weight: bold;
 }
 
-#disk,
-#memory,
-#cpu,
-#network,
-#pulseaudio,
 #battery,
-#custom-keyboard {
+#cpu,
+#disk,
+#language,
+#memory,
+#network,
+#pulseaudio {
   padding-left: 0.4em;
   padding-right: 0.4em;
   margin-left: 0.4em;

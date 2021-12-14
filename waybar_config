@@ -1,12 +1,8 @@
-// TODO:
-//   * Switch to the native (non-polling) keyboard module once it's available.
-//   * Switch to the native clock module once it's supported on debian.
-
 {
     "layer": "bottom",
     "modules-center": ["sway/workspaces", "sway/mode"],
-    "modules-right": ["disk", "memory", "cpu", "network", "pulseaudio", "battery", "custom/keyboard", "tray"],
-    "modules-left": ["custom/clock", "custom/clock-mtw", "custom/clock-nyc", "custom/clock-lon", "custom/clock-srb"],
+    "modules-right": ["disk", "memory", "cpu", "network", "pulseaudio", "battery", "sway/language", "tray"],
+    "modules-left": ["clock", "clock#mtv", "clock#nyc", "clock#lon", "clock#srb"],
 
     "battery": {
         "format": "{capacity}% {icon}",
@@ -14,39 +10,19 @@
         "format-charging": "{capacity}% 🔌",
         "format-plugged": "{capacity}% 🔌"
     },
-    "custom/clock": {
-        "exec": "date +'%Y-%b-%d %H:%M'",
-        "format": "🕑 {}",
-        "interval": 45
-    },
     "clock": {
         "format": "{:🕑 %Y-%b-%d %H:%M}",
         "tooltip": false
-    },
-    "custom/clock-lon": {
-        "exec": "env TZ=Europe/London date +'%H:%M'",
-        "format": "🇬🇧 LON {}",
-        "interval": 45
     },
     "clock#lon": {
         "format": "{:🇬🇧 LON %H:%M}",
         "tooltip": false,
         "timezone": "Europe/London"
     },
-    "custom/clock-mtw": {
-        "exec": "env TZ=America/Los_Angeles date +'%H:%M'",
-        "format": "🇺🇸 MTV {}",
-        "interval": 45
-    },
-    "clock#mtw": {
+    "clock#mtv": {
         "format": "{:🇺🇸 MTV %H:%M}",
         "tooltip": false,
         "timezone": "America/Los_Angeles"
-    },
-    "custom/clock-nyc": {
-        "exec": "env TZ=America/New_York date +'%H:%M'",
-        "format": "🇺🇸 NYC {}",
-        "interval": 45
     },
     "clock#nyc": {
         "format": "{:🇺🇸 NYC %H:%M}",
@@ -68,15 +44,13 @@
         "format": "{}% ",
         "max-length": 10
     },
-    "custom/keyboard": {
-        "interval": 1,
-        "exec": "swaymsg -r -t get_inputs | jq -r '[.[].xkb_active_layout_name | select(. != null)] | unique | .[0]'",
-        "format": "{} ⌨️"
-    },
     "disk": {
         "interval": 30,
         "format": "{path} {free} ({percentage_free}%) 🖴",
         "path": "/"
+    },
+    "sway/language": {
+        "format": "{long} ⌨️"
     },
     "memory": {
         "interval": 30,
