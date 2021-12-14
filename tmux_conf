@@ -1,0 +1,54 @@
+# Enable 256 colors.
+# See: https://github.com/tmux/tmux/wiki/FAQ
+set -g default-terminal 'xterm-256color'
+
+# Window numbers start at 1 instead of 0 to make switching easier.
+set -g base-index 1
+set -g pane-base-index 1
+
+# Renumber windows when some are closed.
+set -g renumber-windows on
+
+# Allow customizing tab names using bash precmd_functions.
+set -g allow-rename on
+
+# Contraint windows size to the largest client screen, instead of the smallest.
+set -g aggressive-resize on
+
+# Longer scrollback history.
+set -g history-limit 50000
+
+# Reload config file.
+bind r source-file ~/.tmux.conf
+
+# Scroll and copy using vi-style keys.
+set -g mode-keys vi
+bind -T copy-mode-vi 'v' send-keys -X begin-selection
+bind -T copy-mode-vi 'y' send-keys -X copy-pipe-and-cancel 'wl-copy'
+bind C-p run 'wl-paste --no-newline | tmux load-buffer - ; tmux paste-buffer'
+
+# Enable mouse and copy-and-paste.
+# See:  https://stackoverflow.com/a/46108732.
+set -g mouse on
+bind -T copy-mode MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel 'wl-copy'
+bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel 'wl-copy'
+
+# Custom styling.
+# See: http://www.hamvocke.com/blog/a-guide-to-customizing-your-tmux-conf/
+set -g status-position bottom
+set -g status-style bg=colour234,fg=colour137,dim
+set -g status-left ''
+set -g status-right '#[fg=colour233,bg=colour241,bold] %d/%m #[fg=colour233,bg=colour245,bold] %H:%M:%S '
+set -g status-right-length 50
+set -g status-left-length 20
+
+set -g window-status-current-style bg=colour238,fg=colour215,bold
+set -g window-status-current-format ' #I#[fg=colour250]:#[fg=colour250]#W#[fg=colour244] '
+
+set -g window-status-style bg=colour235,fg=colour138
+set -g window-status-format ' #I#[fg=colour230]:#[fg=colour250]#W#[fg=colour244] '
+
+set -g window-status-bell-style bg=colour1,fg=colour255,bold
+
+set -g pane-active-border-style bg=colour238,fg=colour238
+set -g pane-border-style bg=colour235,fg=colour235

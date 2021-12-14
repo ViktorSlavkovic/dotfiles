@@ -1,0 +1,232 @@
+set $mod Mod4
+
+# TODO:
+#   * s/terminator/kitty
+#   * s/dmenu/wofi
+#   * s/nm-applet/wofi
+
+################################################################################
+#  Basic window management
+################################################################################
+
+# Change focus.
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Move the focused window.
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# Kill the focused window.
+bindsym $mod+Shift+q kill
+
+# Enter fullscreen mode for the focused window.
+bindsym $mod+f fullscreen toggle
+
+# Split in horizontal/vertical orientation.
+bindsym $mod+h splith
+bindsym $mod+v splitv
+
+# Toggle the current focus between tiling and floating mode.
+bindsym $mod+Shift+space floating toggle
+
+# Drag floating windows by holding down $mod and left mouse button.
+# Resize them with right mouse button + $mod.
+# Despite the name, also works for non-floating windows.
+# Change normal to inverse to use left mouse button for resizing and right
+# mouse button for dragging.
+floating_modifier $mod normal
+
+# Change focus between tiling / floating windows.
+bindsym $mod+space focus mode_toggle
+
+################################################################################
+# Workspaces
+################################################################################
+
+# We use variables to avoid repeating the names in multiple places.
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+# Switch to workspace.
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+#bindsym $mod+Ctrl+Left workspace prev
+#bindsym $mod+Ctrl+Right workspace next
+
+# Move workspace to the next/prev monitor.
+bindsym $mod+Ctrl+Right move workspace to output right
+bindsym $mod+Ctrl+Left move workspace to output left
+
+# Move focused container to workspace.
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+################################################################################
+# Resizing
+################################################################################
+
+mode "R" {
+  bindsym Left resize shrink width 10px
+  bindsym Down resize grow height 10px
+  bindsym Up resize shrink height 10px
+  bindsym Right resize grow width 10px
+
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "R"
+
+################################################################################
+#  Style
+################################################################################
+
+default_border pixel 2
+gaps inner 5
+gaps outer 5
+
+# CLASS                   BORDER  BACKGROUND       TEXT  INDICATOR  CHILD_BORDER
+client.focused           #4c7899     #285577    #ffffff    #2e9ef4       #D35400
+client.focused_inactive  #333333     #5f676a    #ffffff    #484e50       #5f676a
+client.unfocused         #333333     #222222    #888888    #292d2e       #222222
+client.urgent            #2f343a     #900000    #ffffff    #900000       #900000
+client.placeholder       #000000     #0c0c0c    #ffffff    #000000       #0c0c0c
+client.background        #ffffff
+
+################################################################################
+# Bar
+################################################################################
+
+bar {
+  swaybar_command waybar
+}
+
+################################################################################
+# Input configuration
+################################################################################
+
+input type:touchpad {
+  dwt enabled
+  tap enabled
+  natural_scroll enabled
+  middle_emulation enabled
+}
+
+input type:keyboard {
+  xkb_layout "us,rs,rs"
+  xkb_variant ",latin,"
+  xkb_options "grp:win_space_toggle"
+}
+
+################################################################################
+# Keyboard shortucts
+################################################################################
+
+set $term terminator
+set $menu dmenu_path | dmenu | xargs swaymsg exec --
+
+# Start menu
+bindsym $mod+d exec $menu
+
+# Start a terminal
+bindsym $mod+Return exec $term
+
+# Reload the configuration file
+bindsym $mod+Shift+r reload
+
+# Show power options.
+bindsym $mod+Shift+e exec "swaynag -f 'pango:Droid Sans Mono 15'               \
+                           -m 'Power Options'                                  \
+                           -Z ' Log Out '   'swaymsg exit'                     \
+                           -Z ' Restart '   'systemctl reboot'                 \
+                           -Z ' Sleep '     '~/configs/lock.sh suspend'        \
+                           -Z ' Hibernate ' '~/configs/lock.sh hibernate'      \
+                           -Z ' Power Off ' 'systemctl poweroff'"
+
+# Chrome
+bindsym $mod+c exec google-chrome
+
+# Pulse Audio controls:
+bindsym XF86AudioRaiseVolume exec pactl set-sink-0
+bindsym XF86MonBrightnessDown exec light -U 5
+
+# Dock
+bindsym $mod+p exec ~/configs/monitors.py no-internal-normal                   \
+                      > ~/configs/sway_monitor_setup                           \
+                    && swaymsg reload
+bindsym $mod+Shift+p exec ~/configs/monitors.py internal-90ccw                 \
+                      > ~/configs/sway_monitor_setup                           \
+                    && swaymsg reload
+
+# Lock screen.
+bindsym $mod+Shift+s exec ~/configs/lock.sh suspend
+bindsym $mod+Shift+h exec ~/configs/lock.sh hibernate
+bindsym $mod+Shift+z exec ~/configs/lock.sh
+
+# Blueman manager
+bindsym $mod+b exec blueman-manager
+
+################################################################################
+# Screens
+################################################################################
+
+# Default wallpaper.
+output * bg ~/Pictures/wallpapers/wallpaper.jpg fill
+
+# Monitor setup.
+include ~/configs/sway_monitor_setup
+
+# Hint: swaymsg -t get_outputs
+# Hint: output HDMI-A-1 resolution 1920x1080 position 1920,0
+
+################################################################################
+# Idle
+################################################################################
+
+exec swayidle -w                                                               \
+              timeout 900 '~/configs/lock.sh'                                  \
+              timeout 1200 'swaymsg "output * dpms off"'                       \
+              resume 'swaymsg "output * dpms on"'                              \
+              before-sleep '~/configs/lock.sh'                                 \
+              lock '~/configs/lock.sh'
+
+################################################################################
+# Startup
+################################################################################
+
+exec mako
+exec nm-applet --indicator
+exec sh -c "ssh-agent -s -a $SSH_AUTH_SOCK"
+
+################################################################################
+
+include /etc/sway/config.d/*

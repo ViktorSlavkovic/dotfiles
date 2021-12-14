@@ -1,0 +1,122 @@
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "Roboto Mono", "Font Awesome", Arial, sans-serif;
+  font-size: 0.95em;
+  min-height: 0;
+}
+
+window#waybar {
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+}
+
+#workspaces button {
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+  font-family: monospace;
+  font-weight: bold;
+  color: white;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+#workspaces button:hover {
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+  box-shadow: inherit;
+  text-shadow: inherit;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+#workspaces button.focused {
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+  background: rgb(43, 41, 158);
+}
+
+#workspaces button.focused:hover {
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+  box-shadow: inherit;
+  text-shadow: inherit;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+#custom-clock,
+#custom-clock-lon,
+#custom-clock-srb,
+#custom-clock-mtw,
+#custom-clock-nyc {
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+  margin-left: 0.4em;
+  margin-right: 0.4em;
+  font-family: monospace;
+  font-weight: 600;
+}
+
+#mode {
+  background: transparent;
+  font-weight: 600;
+  font-family: "Roboto Mono";
+  border: none;
+  color: red;
+  background-color: black;
+  margin-left: 1em;
+  margin-right: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+#tray {
+  background: rgba(0, 0, 0, 0.4);
+  margin-left: 0.2em;
+  margin-right: 0em;
+  padding-left: 0.3em;
+  padding-right: 0.5em;
+
+  /* For the menus. */
+  font-family: "Arial";
+  font-size: large;
+  font-weight: bold;
+}
+
+#disk,
+#memory,
+#cpu,
+#network,
+#pulseaudio,
+#battery,
+#custom-keyboard {
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+  margin-left: 0.4em;
+  margin-right: 0.4em;
+  background: rgba(0, 0, 0, 0.4);
+  font-family: monospace;
+  font-weight: 600;
+}
+
+#pulseaudio.muted {
+  background: rgba(255, 0, 0, 0.2);
+}
+
+#battery.charging {
+  background: rgba(0, 255, 0, 0.1);
+}
+
+#battery.warning:not(.charging) {
+  background: #b43030;
+}
+
+#battery.warning:not(.charging) {
+  background: #b43030;
+}

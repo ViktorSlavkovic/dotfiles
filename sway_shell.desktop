@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=Sway Shell
+Comment=An i3-compatible Wayland compositor
+Exec=dbus-run-session /usr/bin/sway_shell.sh
+Type=Application
