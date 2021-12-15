@@ -26,4 +26,6 @@ export XDG_CURRENT_DESKTOP=sway
 # Look for the connected screens and arrange them in the preferred way.
 ~/configs/monitors.py "all-normal" > ~/configs/sway_monitor_setup
 
-exec /usr/bin/sway > /tmp/swaystdout.txt 2> /tmp/swaystderr.txt
+timestamp=$(date +%s)
+exec /usr/bin/sway > "/tmp/sway-stdout-${timestamp}.txt" \
+                   2> "/tmp/sway-stderr-${timestamp}.txt"
