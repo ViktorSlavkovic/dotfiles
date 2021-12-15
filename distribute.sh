@@ -28,7 +28,7 @@ fi
 cd "${script_dir}"
 
 ln -sf "${script_dir}/sway_config" ~/.config/sway/config
-ln -sf "${script_dir}/waybar_config" ~/.config/waybar/config
+ln -sf "${script_dir}/waybar_config.json" ~/.config/waybar/config
 ln -sf "${script_dir}/waybar_style.css" ~/.config/waybar/style.css
 ln -sf "${script_dir}/tmux_config" ~/.tmux.conf
 

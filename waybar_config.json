@@ -58,7 +58,6 @@
         "max-length": 10
     },
     "network": {
-        // Optionally, pin interface with: "interface": "wlp2s0"
         "format-wifi": "{ifname}::{ipaddr}::{essid} ({signalStrength}%) ",
         "format-ethernet": "{ifname}::{ipaddr}/{cidr} ",
         "format-disconnected": "Disconnected ⚠"
