@@ -29,11 +29,6 @@
         "tooltip": false,
         "timezone": "America/New_York"
     },
-    "custom/clock-srb": {
-        "exec": "env TZ=Europe/Belgrade date +'%H:%M'",
-        "format": "🇷🇸 SRB {}",
-        "interval": 45
-    },
     "clock#srb": {
         "format": "{:🇷🇸 SRB %H:%M}",
         "tooltip": false,
