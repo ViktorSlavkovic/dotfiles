@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Distributes the configs in it's directory to their rightful places.
+# Distributes the configs in its directory to their rightful places.
 
 # Go to the script's directory, since everything should be there.
 script_dir="$(realpath ${BASH_SOURCE[0]})"
