@@ -7,8 +7,24 @@
 }
 
 window#waybar {
-  background: rgba(0, 0, 0, 0.75);
+  background: transparent;
   color: white;
+}
+
+.modules-right,
+.modules-left,
+.modules-center {
+  background-color: rgba(0, 0, 0, 0.7);
+
+  border-radius: 1em;
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
 }
 
 #workspaces button {
@@ -16,6 +32,7 @@ window#waybar {
   padding-right: 0.2em;
   margin-left: 0.2em;
   margin-right: 0.2em;
+  border-radius: 1em;
   font-family: monospace;
   font-weight: bold;
   color: white;
@@ -55,21 +72,23 @@ window#waybar {
   padding-right: 0.4em;
   margin-left: 0.4em;
   margin-right: 0.4em;
+  border-radius: 1em;
   font-family: monospace;
   font-weight: 600;
+  background: rgba(0, 0, 0, 0.4);
 }
 
 #mode {
-  background: transparent;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+  padding-left: 0.8em;
+  padding-right: 0.6em;
+  border-radius: 1em;
   font-weight: 600;
   font-family: "Roboto Mono";
   border: none;
   color: red;
-  background-color: black;
-  margin-left: 1em;
-  margin-right: 1em;
-  padding-left: 1em;
-  padding-right: 1em;
+  background: rgba(0, 0, 0, 0.4);
 }
 
 #tray {
@@ -78,6 +97,7 @@ window#waybar {
   margin-right: 0em;
   padding-left: 0.3em;
   padding-right: 0.5em;
+  border-radius: 1em;
 
   /* For the menus. */
   font-family: "Arial";
@@ -92,10 +112,11 @@ window#waybar {
 #memory,
 #network,
 #pulseaudio {
-  padding-left: 0.4em;
-  padding-right: 0.4em;
-  margin-left: 0.4em;
-  margin-right: 0.4em;
+  padding-left: 1em;
+  padding-right: 1em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+  border-radius: 1em;
   background: rgba(0, 0, 0, 0.4);
   font-family: monospace;
   font-weight: 600;
@@ -113,6 +134,3 @@ window#waybar {
   background: #b43030;
 }
 
-#battery.warning:not(.charging) {
-  background: #b43030;
-}
