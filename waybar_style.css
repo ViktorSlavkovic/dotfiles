@@ -1,6 +1,5 @@
 * {
   border: none;
-  border-radius: 0;
   font-family: "Roboto Mono", "Font Awesome", Arial, sans-serif;
   font-size: 0.95em;
   min-height: 0;
@@ -21,10 +20,7 @@ window#waybar {
   padding-right: 0.4em;
   padding-top: 0.2em;
   padding-bottom: 0.2em;
-  margin-top: 0.2em;
-  margin-bottom: 0.2em;
-  margin-left: 0.2em;
-  margin-right: 0.2em;
+  margin: 0.2em;
 }
 
 #workspaces button {
@@ -133,4 +129,3 @@ window#waybar {
 #battery.warning:not(.charging) {
   background: #b43030;
 }
-
