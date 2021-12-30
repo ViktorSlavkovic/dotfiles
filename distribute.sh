@@ -16,27 +16,25 @@
 
 # Distributes the configs in its directory to their rightful places.
 
-# Go to the script's directory, since everything should be there.
+# Everything is in the script's directory.
 script_dir="$(realpath ${BASH_SOURCE[0]})"
 script_dir="$(dirname ${script_dir})"
-want_script_dir="$(realpath ~/configs/foo)"
-want_script_dir="$(dirname ${want_script_dir})"
+
+# Force script directory to be ~/configs/.
+want_script_dir="${HOME}/configs"
 if [[ "${script_dir}" != "${want_script_dir}" ]]; then
   echo "The config directory has to be: ${want_script_dir}, but is ${script_dir}" 1>&2
   exit 1
 fi
-cd "${script_dir}"
 
-ln -sf "${script_dir}/sway_config" ~/.config/sway/config
-ln -sf "${script_dir}/terminator_config" ~/.config/terminator/config
-ln -sf "${script_dir}/waybar_config.json" ~/.config/waybar/config
-ln -sf "${script_dir}/waybar_style.css" ~/.config/waybar/style.css
-ln -sf "${script_dir}/tmux_config" ~/.tmux.conf
+chmod u+x "${script_dir}/*.{sh,py}"
 
-chmod u+x lock.sh
-chmod u+x monitors.py
-chmod u+x sway_shell.sh
+ln -sf "${script_dir}/sway_config"        "${HOME}/.config/sway/config"
+ln -sf "${script_dir}/terminator_config"  "${HOME}/.config/terminator/config"
+ln -sf "${script_dir}/waybar_config.json" "${HOME}/.config/waybar/config"
+ln -sf "${script_dir}/waybar_style.css"   "${HOME}/.config/waybar/style.css"
+ln -sf "${script_dir}/tmux_config"        "${HOME}/.tmux.conf"
 
-sudo cp -rf sway_shell.sh /usr/bin/sway_shell.sh
+sudo cp -rf "${script_dir}/sway_shell.sh" /usr/bin/sway_shell.sh
+sudo cp -rf "${script_dir}/sway_shell.desktop" /usr/share/wayland-sessions/sway_shell.desktop
 sudo chmod o+x /usr/bin/sway_shell.sh
-sudo cp -rf sway_shell.desktop /usr/share/wayland-sessions/sway_shell.desktop
