@@ -172,8 +172,8 @@ bindsym $mod+Shift+e exec "swaynag -f 'pango:Droid Sans Mono 15'               \
                            -Z ' Hibernate ' '~/configs/lock.sh hibernate'      \
                            -Z ' Power Off ' 'systemctl poweroff'"
 
-# Chrome
-bindsym $mod+c exec google-chrome
+# Give brave precedence over chrome, if installed.
+bindsym $mod+c exec which brave && brave || google-chrome
 
 # Pulse Audio controls:
 bindsym XF86AudioRaiseVolume exec pactl set-sink-0
@@ -225,7 +225,8 @@ exec swayidle -w                                                               \
 
 exec mako
 exec nm-applet --indicator
-exec sh -c "ssh-agent -s -a $SSH_AUTH_SOCK"
+exec bash -c "ssh-agent -s -a $SSH_AUTH_SOCK"
+exec ~/configs/arch_setup.sh --mode
 
 ################################################################################
 
