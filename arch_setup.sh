@@ -27,12 +27,12 @@ FLAGS_HOST="_UNSET_"
 FLAGS_DOMAIN="_UNSET_"
 FLAGS_USER="_UNSET_"
 FLAGS_DRIVE="_UNSET_"
-FLAGS_MODE="LIVE_IMAGE" # Values: LIVE_IMAGE, CHROOT, POST_SETUP
+FLAGS_MODE="LIVE_IMAGE" # Values: LIVE_IMAGE, CHROOT, POST_SETUP, POST_SETUP_SHOW
 
 function print_usage_and_die() {
   echo "Usage: arch_setup --host=alpha --domain=example.com --user=alice \\"
   echo "                  --drive=/dev/sdX                               \\"
-  echo "                  --mode=(LIVE_IMAGE|CHROOT|POST_SETUP)"
+  echo "                  --mode=(LIVE_IMAGE|CHROOT|POST_SETUP|POST_SETUP_SHOW)"
   exit 2
 }
 
@@ -500,8 +500,8 @@ function post_setup() {
     exit 0
   fi
 
-  if [[ "$1" != "show" ]]; then
-    terminator -x "$0" show
+  if [[ "${FLAGS_MODE}" != "POST_SETUP_SHOW" ]]; then
+    terminator -m -f -e "$0 --mode=POST_SETUP_SHOW"
     exit 0
   fi
 
@@ -552,7 +552,7 @@ case "${FLAGS_MODE}" in
   CHROOT)
     in_chroot
     ;;
-  POST_SETUP)
+  POST_SETUP | POST_SETUP_SHOW)
     post_setup
     ;;
   *)
