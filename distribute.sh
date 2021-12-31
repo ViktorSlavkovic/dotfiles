@@ -29,6 +29,9 @@ fi
 
 chmod u+x "${script_dir}/*.{sh,py}"
 
+mkdir -p "${HOME}/.config/sway"
+mkdir -p "${HOME}/.config/terminator"
+mkdir -p "${HOME}/.config/waybar"
 ln -sf "${script_dir}/sway_config"        "${HOME}/.config/sway/config"
 ln -sf "${script_dir}/terminator_config"  "${HOME}/.config/terminator/config"
 ln -sf "${script_dir}/waybar_config.json" "${HOME}/.config/waybar/config"
