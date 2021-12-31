@@ -226,7 +226,7 @@ exec swayidle -w                                                               \
 exec mako
 exec nm-applet --indicator
 exec bash -c "ssh-agent -s -a $SSH_AUTH_SOCK"
-exec ~/configs/arch_setup.sh --mode
+exec ~/configs/arch_setup.sh --mode POST_SETUP
 
 ################################################################################
 
