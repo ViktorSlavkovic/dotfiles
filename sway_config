@@ -200,7 +200,7 @@ bindsym $mod+b exec blueman-manager
 ################################################################################
 
 # Default wallpaper.
-output * bg ~/Pictures/wallpapers/wallpaper.jpg fill
+output * bg ~/configs/wallpaper.jpg fill
 
 # Monitor setup.
 include ~/configs/sway_monitor_setup
