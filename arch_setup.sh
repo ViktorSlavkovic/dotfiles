@@ -234,17 +234,65 @@ EOM
   # imagemagick for convert
   # mako for wayland notifications
   # TODO: Transition to pipewire
-  yes | pacstrap /mnt base dmenu grub efibootmgr gnu-free-fonts gdm linux      \
-                      linux-firmware terminator network-manager-applet         \
-                      networkmanager noto-fonts-emoji pavucontrol pulseaudio   \
-                      ranger sudo sway swaybg swayidle swaylock ttf-droid      \
-                      ttf-font-awesome unzip vim waybar xorg-xwayland          \
-                      grim imagemagick pulseaudio-alsa pulseaudio-bluetooth    \
-                      blueman light python bluez bluez-utils mesa vulkan-intel \
-                      vulkan-icd-loader vulkan-tools acpi_call git base-devel  \
-		                  man-db jq udevil ntfs-3g encfs libva-utils               \
-                      intel-media-driver openssh gimp firefox tmux gthumb vlc  \
-                      imagemagick mako
+  yes | pacstrap /mnt      \
+    acpi_call              \
+    base                   \
+    base-devel             \
+    blueman                \
+    bluez                  \
+    bluez-utils            \
+    dmenu                  \
+    efibootmgr             \
+    encfs                  \
+    firefox                \
+    gdm                    \
+    gimp                   \
+    git                    \
+    gnu-free-fonts         \
+    grim                   \
+    grub                   \
+    gthumb                 \
+    imagemagick            \
+    intel-media-driver     \
+    jq                     \
+    libva-utils            \
+    light                  \
+    linux                  \
+    linux-firmware         \
+    mako                   \
+    man-db                 \
+    mesa                   \
+    networkmanager         \
+    network-manager-applet \
+    noto-fonts-emoji       \
+    ntfs-3g                \
+    ntp                    \
+    openssh                \
+    pavucontrol            \
+    pulseaudio             \
+    pulseaudio-alsa        \
+    pulseaudio-bluetooth   \
+    python                 \
+    ranger                 \
+    sudo                   \
+    sway                   \
+    swaybg                 \
+    swayidle               \
+    swaylock               \
+    terminator             \
+    tmux                   \
+    ttf-droid              \
+    ttf-font-awesome       \
+    udevil                 \
+    unzip                  \
+    vim                    \
+    vlc                    \
+    vulkan-icd-loader      \
+    vulkan-intel           \
+    vulkan-tools           \
+    waybar                 \
+    xorg-xwayland
+
   if [ "$?" == "0" ]; then
     echo_spaced 2 "OK"
   else
