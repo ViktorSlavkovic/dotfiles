@@ -40,7 +40,7 @@ sudo cp -rf "${script_dir}/sway_shell.desktop" /usr/share/wayland-sessions/sway_
 sudo chmod o+x /usr/bin/sway_shell.sh
 
 if [[ -f "${HOME}/.bashrc" ]]; then
-  local bashrc_implant_grep="$(cat "${HOME}/.bashrc" | grep "bashrc_implant.sh")"
+  bashrc_implant_grep="$(cat "${HOME}/.bashrc" | grep "bashrc_implant.sh")"
   if [[ -z "${bashrc_implant_grep}" ]]; then
     echo >> "${HOME}/.bashrc"
     echo "source ~/configs/bashrc_implant.sh" >> "${HOME}/.bashrc"
