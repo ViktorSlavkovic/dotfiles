@@ -58,7 +58,7 @@ function parse_flags() {
       --domain)    FLAGS_DOMAIN="$2" ; shift 2 ;;
       --user)      FLAGS_USER="$2"   ; shift 2 ;;
       --drive)     FLAGS_DRIVE="$2"  ; shift 2 ;;
-      --env)       FLAGS_MODE="$2"   ; shift 2 ;;
+      --mode)      FLAGS_MODE="$2"   ; shift 2 ;;
       # End of flags.
       --)       shift; break ;;
       # Invalid argument.
@@ -132,7 +132,7 @@ function in_live_image() {
     exit 1 
   fi
 
-  echo "Enabling NTP"
+  echo "Enabling NTP" 
   cat > /etc/ntp.conf << EOM
 server time1.google.com iburst
 server time2.google.com iburst
@@ -140,7 +140,8 @@ server time3.google.com iburst
 server time4.google.com iburst
 EOM
   # Note that timedatectl != ntpd.
-  if systemctl enable ntpd.service; then
+  pacman -Sy --noconfirm ntp
+  if systemctl --now enable ntpd.service; then
     echo_spaced 2 "OK"
   else
     echo_err_spaced 2 "Failed to enable NTP"
@@ -429,7 +430,7 @@ EOM
 
   echo_spaced 2 "Running distribute.sh"
   chmod u+x ./configs/distribute.sh
-  ./configs/distribute.sh
+  HOME="/home/${FLAGS_USER}" ./configs/distribute.sh
 
   touch "configs/arch_setup_uninitialized"
 
