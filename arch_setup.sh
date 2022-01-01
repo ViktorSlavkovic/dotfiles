@@ -264,6 +264,7 @@ EOM
     mesa                   \
     networkmanager         \
     network-manager-applet \
+    noto-fonts             \
     noto-fonts-emoji       \
     ntfs-3g                \
     ntp                    \
@@ -283,6 +284,10 @@ EOM
     tmux                   \
     ttf-droid              \
     ttf-font-awesome       \
+    ttf-opensans           \
+    ttf-roboto             \
+    ttf-roboto-mono        \
+    ttf-ubuntu-font-family \
     udevil                 \
     unzip                  \
     vim                    \
@@ -533,7 +538,9 @@ EOM
   rm -rf yay
 
   echo "Install stuff with yay"
-  yay -S --noconfirm brave-bin visual-studio-code-bin
+  yay -S --noconfirm       \
+    brave-bin              \
+    visual-studio-code-bin
 
   echo "Done, press any key to exit ..."
   read
