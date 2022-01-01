@@ -152,7 +152,8 @@ input type:keyboard {
 ################################################################################
 
 set $term terminator
-set $menu dmenu_path | dmenu -fn "Droid Sans Mono-10" | xargs swaymsg exec --
+set $menu dmenu_path | dmenu -fn "Roboto Mono-14" -nb "#1E1E1E" -sb "#20420a"  \
+                     | xargs swaymsg exec --
 
 # Start menu
 bindsym $mod+d exec $menu
@@ -164,7 +165,7 @@ bindsym $mod+Return exec $term
 bindsym $mod+Shift+r reload
 
 # Show power options.
-bindsym $mod+Shift+e exec "swaynag -f 'pango:Droid Sans Mono 15'               \
+bindsym $mod+Shift+e exec "swaynag -f 'pango:Roboto Mono 13'                   \
                            -m 'Power Options'                                  \
                            -Z ' Log Out '   'swaymsg exit'                     \
                            -Z ' Restart '   'systemctl reboot'                 \

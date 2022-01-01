@@ -1,6 +1,5 @@
 * {
   border: none;
-  font-family: "Droid Sans Mono", "Font Awesome", Arial, sans-serif;
   font-size: 0.95em;
   min-height: 0;
 }
@@ -13,6 +12,8 @@ window#waybar {
 .modules-right,
 .modules-left,
 .modules-center {
+  font-family: "Roboto Mono", "Font Awesome", Arial, sans-serif;
+  font-stretch: condensed;
   background-color: rgba(0, 0, 0, 0.7);
 
   border-radius: 1em;
@@ -29,7 +30,6 @@ window#waybar {
   margin-left: 0.2em;
   margin-right: 0.2em;
   border-radius: 1em;
-  font-family: monospace;
   font-weight: bold;
   color: white;
   background: rgba(0, 0, 0, 0.4);
@@ -69,7 +69,6 @@ window#waybar {
   margin-left: 0.4em;
   margin-right: 0.4em;
   border-radius: 1em;
-  font-family: monospace;
   font-weight: 600;
   background: rgba(0, 0, 0, 0.4);
 }
@@ -81,7 +80,6 @@ window#waybar {
   padding-right: 0.6em;
   border-radius: 1em;
   font-weight: 600;
-  font-family: "Roboto Mono";
   border: none;
   color: red;
   background: rgba(0, 0, 0, 0.4);
@@ -114,7 +112,6 @@ window#waybar {
   margin-right: 0.2em;
   border-radius: 1em;
   background: rgba(0, 0, 0, 0.4);
-  font-family: monospace;
   font-weight: 600;
 }
 

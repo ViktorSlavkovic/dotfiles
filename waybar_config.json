@@ -45,7 +45,7 @@
         "path": "/"
     },
     "sway/language": {
-        "format": "{long} ⌨️",
+        "format": "{short} {variant} ⌨️",
         "tooltip": false
     },
     "memory": {
