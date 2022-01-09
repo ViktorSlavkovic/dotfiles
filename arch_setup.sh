@@ -230,12 +230,12 @@ EOM
   fi
 
   echo "Installing essential packages"
-  # jq needed for the lock script
-  # imagemagick for convert
-  # mako for wayland notifications
   # TODO: Transition to pipewire
   yes | pacstrap /mnt      \
     acpi_call              \
+    alsa-firmware          \  # Audio: Required by Dell XPS13 9310 and other new laptops which implement their drivers with firmware provided by the Sound Open Firmware project.
+    sof-firmware           \  # Audio: Required by Dell XPS13 9310 and other new laptops which implement their drivers with firmware provided by the Sound Open Firmware project.
+    alsa-ucm-conf          \  # Audio: Required by Dell XPS13 9310 and other new laptops which implement their drivers with firmware provided by the Sound Open Firmware project.
     base                   \
     base-devel             \
     blueman                \
@@ -252,14 +252,14 @@ EOM
     grim                   \
     grub                   \
     gthumb                 \
-    imagemagick            \
+    imagemagick            \  # Screen lock: convert needed for the blurry screen.
     intel-media-driver     \
-    jq                     \
+    jq                     \  # Screen lock: filtering JSON from Sway's get_outputs.
     libva-utils            \
     light                  \
     linux                  \
     linux-firmware         \
-    mako                   \
+    mako                   \  # Wayland: notifications.
     man-db                 \
     mesa                   \
     networkmanager         \
