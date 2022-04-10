@@ -166,6 +166,11 @@ EOM
     exit 1
   fi
 
+  # Looks like there's some async flushing/propagation that needs to happen after
+  # parted exits in order for udev and lsblk to know about partlabel, so let's
+  # wait a bit.
+  sleep 5s
+
   echo "Run mkfs.ext4 on the root partition"
   root_path=$(lsblk -ln -o PATH,PARTLABEL | grep ${FLAGS_DRIVE} | grep "root" | awk '{print $1}')
   echo_spaced 2 "root is ${root_path}"
@@ -231,11 +236,17 @@ EOM
 
   echo "Installing essential packages"
   # TODO: Transition to pipewire
+  # alsa-firmware: Audio: Required by Dell XPS13 9310 and other new laptops which implement their drivers with firmware provided by the Sound Open Firmware project.
+  # sof-firmware:  same
+  # alsa-ucm-conf: same
+  # imagemagick:   Screen lock: convert needed for the blurry screen.
+  # jq:            Screen lock: filtering JSON from Sway's get_outputs.
+  # mako:          Wayland: notifications.
   yes | pacstrap /mnt      \
     acpi_call              \
-    alsa-firmware          \  # Audio: Required by Dell XPS13 9310 and other new laptops which implement their drivers with firmware provided by the Sound Open Firmware project.
-    sof-firmware           \  # Audio: Required by Dell XPS13 9310 and other new laptops which implement their drivers with firmware provided by the Sound Open Firmware project.
-    alsa-ucm-conf          \  # Audio: Required by Dell XPS13 9310 and other new laptops which implement their drivers with firmware provided by the Sound Open Firmware project.
+    alsa-firmware          \
+    sof-firmware           \
+    alsa-ucm-conf          \
     base                   \
     base-devel             \
     blueman                \
@@ -252,14 +263,14 @@ EOM
     grim                   \
     grub                   \
     gthumb                 \
-    imagemagick            \  # Screen lock: convert needed for the blurry screen.
+    imagemagick            \
     intel-media-driver     \
-    jq                     \  # Screen lock: filtering JSON from Sway's get_outputs.
+    jq                     \
     libva-utils            \
     light                  \
     linux                  \
     linux-firmware         \
-    mako                   \  # Wayland: notifications.
+    mako                   \
     man-db                 \
     mesa                   \
     networkmanager         \
@@ -288,7 +299,6 @@ EOM
     ttf-roboto             \
     ttf-roboto-mono        \
     ttf-ubuntu-font-family \
-    udevil                 \
     unzip                  \
     vim                    \
     vlc                    \
@@ -540,6 +550,7 @@ EOM
   echo "Install stuff with yay"
   yay -S --noconfirm       \
     brave-bin              \
+    udevil                 \
     visual-studio-code-bin
 
   echo "Done, press any key to exit ..."
