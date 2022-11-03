@@ -70,6 +70,7 @@ window#waybar {
   margin-right: 0.4em;
   border-radius: 1em;
   font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
   background: rgba(0, 0, 0, 0.4);
 }
 
@@ -111,6 +112,7 @@ window#waybar {
   margin-left: 0.2em;
   margin-right: 0.2em;
   border-radius: 1em;
+  color: rgba(255, 255, 255, 0.8);
   background: rgba(0, 0, 0, 0.4);
   font-weight: 600;
 }
