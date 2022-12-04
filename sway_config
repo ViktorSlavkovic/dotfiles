@@ -27,6 +27,10 @@ bindsym $mod+Shift+q kill
 # Enter fullscreen mode for the focused window.
 bindsym $mod+f fullscreen toggle
 
+# Special fullscreen type for broken Chrome + Wayland interaction.
+# See https://tinyurl.com/chrome-ozone-wayland-full.
+bindsym $mod+Shift+f floating toggle; exec ~/configs/chrome_fullscreen_toggle.sh
+
 # Split in horizontal/vertical orientation.
 bindsym $mod+h splith
 bindsym $mod+v splitv
