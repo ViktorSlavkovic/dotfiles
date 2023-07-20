@@ -252,6 +252,7 @@ EOM
     blueman                \
     bluez                  \
     bluez-utils            \
+    docker                 \
     dmenu                  \
     efibootmgr             \
     encfs                  \
@@ -429,6 +430,15 @@ EOM
     echo_spaced 2 "OK"
   else
     echo_err_spaced 2 "Failed to enable gdm service"
+    exit 1
+  fi
+
+  # This can be moved to somewhere later, it's not that crucial.
+  echo "Enable Docker service"
+  if systemctl enable docker.service; then
+    echo_spaced 2 "OK"
+  else
+    echo_err_spaced 2 "Failed to enable Docker service"
     exit 1
   fi
 
