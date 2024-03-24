@@ -11,26 +11,26 @@
         "format-plugged": "{capacity}% 🔌"
     },
     "clock": {
-        "format": "{:🕑 %Y-%b-%d %H:%M}",
+        "format": "🕑 {:%Y-%b-%d %H:%M}",
         "tooltip": false
     },
     "clock#lon": {
-        "format": "{:🇬🇧 LON %H:%M}",
+        "format": "🇬🇧 LON {:%H:%M}",
         "tooltip": false,
         "timezone": "Europe/London"
     },
     "clock#mtv": {
-        "format": "{:🇺🇸 MTV %H:%M}",
+        "format": "🇺🇸 MTV {:%H:%M}",
         "tooltip": false,
         "timezone": "America/Los_Angeles"
     },
     "clock#nyc": {
-        "format": "{:🇺🇸 NYC %H:%M}",
+        "format": "🇺🇸 NYC {:%H:%M}",
         "tooltip": false,
         "timezone": "America/New_York"
     },
     "clock#srb": {
-        "format": "{:🇷🇸 SRB %H:%M}",
+        "format": "🇷🇸 SRB {:%H:%M}",
         "tooltip": false,
         "timezone": "Europe/Belgrade"
     },
