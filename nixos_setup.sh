@@ -226,13 +226,15 @@ function in_live_image_root() {
   local swap_size="$(_ram_gib_round_pow2)"
   LOG INFO 2 "RAM size in GiB rounded to the next power of 2 is ${swap_size}GiB."
   LOG INFO 2 "Using that as swap size."
-  parted --script "${FLAGS_DRIVE}"                                               \
-    mklabel gpt                                                                  \
-    mkpart "efi" fat32 1MiB 512MiB                                               \
-    mkpart "root" ext4 512MiB -"${swap_size}"GiB                                 \
-    mkpart "swap" linux-swap -"${swap_size}"GiB 100                              \
-    set 1 esp on                                                                 \
-    quit && partprobe "${FLAGS_DRIVE}"
+  # For some reason parted --script doesn't support using negative numbers to
+  # represent offset from the end of the disk, so we're going with multiple
+  # parted calls here.
+  parted "${FLAGS_DRIVE}" -- mklabel gpt                                     &&\
+  parted "${FLAGS_DRIVE}" -- mkpart "efi" fat32 1MiB 512MiB                  &&\
+  parted "${FLAGS_DRIVE}" -- mkpart "root" ext4 512MiB -"${swap_size}"GiB    &&\
+  parted "${FLAGS_DRIVE}" -- mkpart "swap" linux-swap -"${swap_size}"GiB 100 &&\
+  parted "${FLAGS_DRIVE}" -- set 1 esp on                                    &&\
+  partprobe "${FLAGS_DRIVE}"
   if [ "$?" == "0" ]; then
     LOG SUCCESS 2 "OK"
   else
