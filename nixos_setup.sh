@@ -229,10 +229,16 @@ function in_live_image_root() {
   # For some reason parted --script doesn't support using negative numbers to
   # represent offset from the end of the disk, so we're going with multiple
   # parted calls here.
+  #
+  # Parted doesn't generally treats GB as GiB, but it also uses GiB as a signal
+  # of "user knows what they are doing", meaning that it won't perform alignment
+  # at the expense of your partition size, while GB is treated as more wiggly.
+  # That's why we use MB and GB here. In fact, replacing it with MiB and GiB
+  # causes misalignment warnings on one of my systems.
   parted -s "${FLAGS_DRIVE}" mklabel gpt                                     &&\
-  parted "${FLAGS_DRIVE}" -- mkpart "efi" fat32 1MiB 512MiB                  &&\
-  parted "${FLAGS_DRIVE}" -- mkpart "root" ext4 512MiB -"${swap_gib}"GiB     &&\
-  parted "${FLAGS_DRIVE}" -- mkpart "swap" linux-swap -"${swap_gib}"GiB 100% &&\
+  parted "${FLAGS_DRIVE}" -- mkpart "efi" fat32 1MB 512MB                    &&\
+  parted "${FLAGS_DRIVE}" -- mkpart "root" ext4 512MB -"${swap_gib}"GB       &&\
+  parted "${FLAGS_DRIVE}" -- mkpart "swap" linux-swap -"${swap_gib}"GB 100%  &&\
   parted "${FLAGS_DRIVE}" -- set 1 esp on                                    &&\
   partprobe "${FLAGS_DRIVE}"
   if [ "$?" == "0" ]; then
