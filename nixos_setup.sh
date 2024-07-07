@@ -70,7 +70,7 @@ function LOG_INFO() {
     local indent="$1"
     shift
   fi
-  _log_helper "default" "${indent}" $@
+  _log_helper "default" "${indent}" "$@"
 }
 
 function LOG_ERROR() {
@@ -79,7 +79,7 @@ function LOG_ERROR() {
     local indent="$1"
     shift
   fi
-  _log_helper "error" "${indent}" $@
+  _log_helper "error" "${indent}" "$@"
 }
 
 function LOG_SUCCESS() {
@@ -88,7 +88,7 @@ function LOG_SUCCESS() {
     local indent="$1"
     shift
   fi
-  _log_helper "success" "${indent}" $@
+  _log_helper "success" "${indent}" "$@"
 }
 
 function LOG() {
