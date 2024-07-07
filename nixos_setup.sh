@@ -269,7 +269,7 @@ function in_live_image_root() {
     exit 1
   fi
 
-  LOG INFO  "Formatting the swap partition with mkswap..."
+  LOG INFO "Formatting the swap partition with mkswap..."
   local swap_path="$(lsblk -ln -o PATH,PARTLABEL | grep ${FLAGS_DRIVE} | grep "swap" | awk '{print $1}')"
   LOG INFO 2 "swap is ${swap_path}"
   mkswap -L swap "${swap_path}" > /dev/null 2>&1
@@ -277,6 +277,35 @@ function in_live_image_root() {
     LOG SUCCESS 2 "OK"
   else
     LOG ERROR 2 "Failed to format swap."
+    exit 1
+  fi
+
+  LOG INFO "Mount root..."
+  mkdir -p /mnt
+  mount /dev/disk/by-label/root /mnt
+  if [ "$?" == "0" ]; then
+    LOG INFO 2 "OK"
+  else
+    LOG SUCCESS 2 "Failed to mount root."
+    exit 1
+  fi
+
+  LOG INFO "Mount efi..."
+  mkdir -p /mnt/efi
+  mount /dev/disk/by-label/efi /mnt/efi
+  if [ "$?" == "0" ]; then
+    LOG INFO 2 "OK"
+  else
+    LOG SUCCESS 2 "Failed to mount efi."
+    exit 1
+  fi
+
+  LOG INFO "Activating swap..."
+  swapon /dev/disk/by-label/swap
+  if [ "$?" == "0" ]; then
+    LOG INFO 2 "OK"
+  else
+    LOG SUCCESS 2 "Failed activate swap."
     exit 1
   fi
 
