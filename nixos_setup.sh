@@ -229,8 +229,8 @@ function in_live_image_root() {
   parted --script "${FLAGS_DRIVE}"                                               \
     mklabel gpt                                                                  \
     mkpart "efi" fat32 1MiB 512MiB                                               \
-    mkpart "root" ext4 512MiB -${swap_size}GiB                                   \
-    mkpart "swap" linux-swap -${swap_size}GiB 100                                \
+    mkpart "root" ext4 512MiB -"${swap_size}"GiB                                 \
+    mkpart "swap" linux-swap -"${swap_size}"GiB 100                              \
     set 1 esp on                                                                 \
     quit && partprobe "${FLAGS_DRIVE}"
   if [ "$?" == "0" ]; then
