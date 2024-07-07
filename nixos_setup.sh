@@ -15,6 +15,7 @@
 # limitations under the License.
 
 function print_usage_and_die() {
+  echo "                                                                                "
   echo "Usage: nixos_setup --host=alpha --domain=example.com --user=alice             \\"
   echo "                   --drive=/dev/sdX                                           \\"
   echo "                   --mode=(LIVE_IMAGE|CHROOT|POST_SETUP|POST_SETUP_SHOW)        "
@@ -29,6 +30,62 @@ function print_usage_and_die() {
 }
 
 ################################################################################
+# Utilities
+################################################################################
+
+function _log_helper() {
+  # _log_helper color indent msg
+  local color="$1"
+  shift
+  local indent="$1"
+  shift
+
+  local ts="$(date -u "+%Y-%m-%d %H:%M:%S.%N %Z")"
+  local pad="$(printf %${indent}s)"
+  local start="I"
+  local cbefore=""
+  local cafter=""
+  if [[ "${color}" == "error" ]]; then
+    start="E"
+    cbefore="\033[0;31m"
+    cafter="\033[0m"
+  elif [[ "${color}" == "success" ]]; then
+    start="S"
+    cbefore="\033[0;32m"
+    cafter="\033[0m"
+  fi
+
+  echo -e "${cbefore}${start}${cafter} [${ts}] ${pad}${cbefore}${@}${cafter}"
+}
+
+function LOG_INFO() {
+  local indent=0
+  if [[ $# -gt 1 ]]; then
+    local indent="$1"
+    shift
+  fi
+  _log_helper "default" "${indent}" $@
+}
+
+function LOG_ERROR() {
+  local indent=0
+  if [[ $# -gt 1 ]]; then
+    local indent="$1"
+    shift
+  fi
+  _log_helper "error" "${indent}" $@
+}
+
+function LOG_SUCCESS() {
+  local indent=0
+  if [[ $# -gt 1 ]]; then
+    local indent="$1"
+    shift
+  fi
+  _log_helper "success" "${indent}" $@
+}
+
+################################################################################
 # Flag parsing
 ################################################################################
 
@@ -38,19 +95,19 @@ FLAGS_USER="_UNSET_"
 FLAGS_DRIVE="_UNSET_"
 FLAGS_MODE="LIVE_IMAGE" # Values: LIVE_IMAGE, CHROOT, POST_SETUP, POST_SETUP_SHOW
 
-function print_flags() {
-  echo "--host=${FLAGS_HOST}"
-  echo "--domain=${FLAGS_DOMAIN}"
-  echo "--user=${FLAGS_USER}"
-  echo "--drive=${FLAGS_DRIVE}"
-  echo "--mode=${FLAGS_MODE}"
+function LOG_FLAGS() {
+  LOG_INFO "--host=${FLAGS_HOST}"
+  LOG_INFO "--domain=${FLAGS_DOMAIN}"
+  LOG_INFO "--user=${FLAGS_USER}"
+  LOG_INFO "--drive=${FLAGS_DRIVE}"
+  LOG_INFO "--mode=${FLAGS_MODE}"
 }
 
 function parse_flags() {
   local parsed="$(getopt -a -n nixos_setup \
                     -l host:,domain:,user:,drive:,eth:,wifi:,mode: -- "$@")"
   if [ "$?" != "0" ]; then
-    echo "getopt failed"
+    LOG_ERROR "getopt failed to parse flags"
     print_usage_and_die
   fi
   eval set -- "${parsed}"
@@ -64,7 +121,7 @@ function parse_flags() {
       # End of flags.
       --)       shift; break ;;
       # Invalid argument.
-      *) echo "invalid argument $1"; print_usage_and_die; ;;
+      *) LOG_ERROR "Invalid argument $1"; print_usage_and_die; ;;
     esac
   done
 }
@@ -76,7 +133,7 @@ function force_flags() {
   mandatory_flags+="${FLAGS_USER}"
   mandatory_flags+="${FLAGS_DRIVE}"
   if [[ "${mandatory_flags}" == *"_UNSET_"* ]]; then
-    echo "mandatory not set"
+    LOG_ERROR "Not all mandatory flags are set!"
     print_usage_and_die
   fi
 }
@@ -86,30 +143,16 @@ SCRIPT_PATH="$0"
 parse_flags ${SCRIPT_PATH} ${ALL_FLAGS}
 
 ################################################################################
-# Utilities
-################################################################################
-
-function echo_spaced() {
-  local num_spaces="$1"
-  shift
-  echo "$(printf %${num_spaces}s)$@"
-}
-
-function echo_err_spaced() {
-  echo_spaced $@ 1>&2
-}
-
-################################################################################
 # In live image's root
 ################################################################################
 
 function in_live_image() {
   force_flags
 
-  echo "Hello from live image!"
-  print_flags
+  LOG_INFO "Hello from live image!"
+  LOG_FLAGS
 
-  echo_err_spaced 0 "Unimplemented, coming soon."
+  LOG_ERROR "Unimplemented, coming soon."
   exit 1
 }
 
@@ -120,10 +163,10 @@ function in_live_image() {
 function in_chroot() {
   force_flags
 
-  echo "Hello from chroot!"
-  print_flags
+  LOG_INFO "Hello from chroot!"
+  LOG_FLAGS
 
-  echo_err_spaced 0 "Unimplemented, coming soon."
+  LOG_ERROR "Unimplemented, coming soon."
   exit 1
 }
 
@@ -134,10 +177,10 @@ function in_chroot() {
 function post_setup() {
   force_flags
 
-  echo "Hello from post-setup!"
-  print_flags
+  LOG_INFO "Hello from post-setup!"
+  LOG_FLAGS
 
-  echo_err_spaced 0 "Unimplemented, coming soon."
+  LOG_ERROR "Unimplemented, coming soon."
   exit 1
 }
 
@@ -157,7 +200,7 @@ function main() {
     post_setup
     ;;
   *)
-    echo_err_spaced 0 "Unrecognized mode!"
+    LOG_ERROR "Invalid --mode=${FLAGS_MODE}"
     print_usage_and_die
   esac
 }
