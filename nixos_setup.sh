@@ -113,11 +113,13 @@ FLAGS_DRIVE="_UNSET_"
 FLAGS_MODE="LIVE_IMAGE_NON_ROOT"
 
 function LOG_FLAGS() {
-  LOG INFO "--host=${FLAGS_HOST}"
-  LOG INFO "--domain=${FLAGS_DOMAIN}"
-  LOG INFO "--user=${FLAGS_USER}"
-  LOG INFO "--drive=${FLAGS_DRIVE}"
-  LOG INFO "--mode=${FLAGS_MODE}"
+  local indent="$1"
+  shift
+  LOG INFO "${indent}" "--host=${FLAGS_HOST}"
+  LOG INFO "${indent}" "--domain=${FLAGS_DOMAIN}"
+  LOG INFO "${indent}" "--user=${FLAGS_USER}"
+  LOG INFO "${indent}" "--drive=${FLAGS_DRIVE}"
+  LOG INFO "${indent}" "--mode=${FLAGS_MODE}"
 }
 
 function parse_flags() {
@@ -167,7 +169,7 @@ function in_live_image_non_root() {
   force_flags
 
   LOG INFO "Hello from live image as ${USER}!"
-  LOG_FLAGS
+  LOG_FLAGS 2
 
   LOG INFO "Checking if booted as UEFI..."
   if ls /sys/firmware/efi/efivars > /dev/null 2>&1; then
@@ -207,7 +209,7 @@ function in_live_image_root() {
   force_flags
 
   LOG INFO "Hello from live image as ${USER}!"
-  LOG_FLAGS
+  LOG_FLAGS 2
 
   LOG ERROR "Unimplemented, coming soon."
   exit 1
@@ -221,7 +223,7 @@ function in_chroot() {
   force_flags
 
   LOG INFO "Hello from chroot!"
-  LOG_FLAGS
+  LOG_FLAGS 2
 
   LOG ERROR "Unimplemented, coming soon."
   exit 1
@@ -235,7 +237,7 @@ function post_setup() {
   force_flags
 
   LOG INFO "Hello from post-setup!"
-  LOG_FLAGS
+  LOG_FLAGS 2
 
   LOG ERROR "Unimplemented, coming soon."
   exit 1
