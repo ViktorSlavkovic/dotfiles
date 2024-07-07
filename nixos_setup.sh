@@ -17,8 +17,14 @@
 function print_usage_and_die() {
   echo "                                                                                "
   echo "Usage: nixos_setup --host=alpha --domain=example.com --user=alice             \\"
-  echo "                   --drive=/dev/sdX                                           \\"
-  echo "                   --mode=(LIVE_IMAGE|CHROOT|POST_SETUP|POST_SETUP_SHOW)        "
+  echo "                   --drive=/dev/sdX [--mode=MODE]                             \\"
+  echo "                                                                                "
+  echo "Where MODE can be one of:                                                       "
+  echo "  LIVE_IMAGE_NON_ROOT - Default. Execute in live image with or without root.    "
+  echo "  LIVE_IMAGE_ROOT     - Execute in live image as root.                          "
+  echo "  CHROOT              - Execute in chroot environment during setup.             "
+  echo "  POST_SETUP          - Execute after the setup, on first login as --user.      "
+  echo "  POST_SETUP_SHOW     - Same as above, just in a visible console.               "
   echo "                                                                                "
   echo "This script automates installation of NixOS (https://nixos.org) on my systems.  "
   echo "It's supposed to be run from the NixOS minimal ISO image and it will do the     "
@@ -85,6 +91,21 @@ function LOG_SUCCESS() {
   _log_helper "success" "${indent}" $@
 }
 
+function LOG() {
+  local severity="$1"
+  shift
+  case "${severity}" in
+    SUCCESS)
+      LOG_SUCCESS $@
+      ;;
+    ERROR)
+      LOG_ERROR $@
+      ;;
+    *)
+      LOG_INFO $@
+  esac
+}
+
 ################################################################################
 # Flag parsing
 ################################################################################
@@ -93,21 +114,22 @@ FLAGS_HOST="_UNSET_"
 FLAGS_DOMAIN="_UNSET_"
 FLAGS_USER="_UNSET_"
 FLAGS_DRIVE="_UNSET_"
-FLAGS_MODE="LIVE_IMAGE" # Values: LIVE_IMAGE, CHROOT, POST_SETUP, POST_SETUP_SHOW
+# Values: LIVE_IMAGE_NON_ROOT, CHROOT, POST_SETUP, POST_SETUP_SHOW
+FLAGS_MODE="LIVE_IMAGE_NON_ROOT"
 
 function LOG_FLAGS() {
-  LOG_INFO "--host=${FLAGS_HOST}"
-  LOG_INFO "--domain=${FLAGS_DOMAIN}"
-  LOG_INFO "--user=${FLAGS_USER}"
-  LOG_INFO "--drive=${FLAGS_DRIVE}"
-  LOG_INFO "--mode=${FLAGS_MODE}"
+  LOG INFO "--host=${FLAGS_HOST}"
+  LOG INFO "--domain=${FLAGS_DOMAIN}"
+  LOG INFO "--user=${FLAGS_USER}"
+  LOG INFO "--drive=${FLAGS_DRIVE}"
+  LOG INFO "--mode=${FLAGS_MODE}"
 }
 
 function parse_flags() {
   local parsed="$(getopt -a -n nixos_setup \
                     -l host:,domain:,user:,drive:,eth:,wifi:,mode: -- "$@")"
   if [ "$?" != "0" ]; then
-    LOG_ERROR "getopt failed to parse flags"
+    LOG ERROR "getopt failed to parse flags"
     print_usage_and_die
   fi
   eval set -- "${parsed}"
@@ -121,7 +143,7 @@ function parse_flags() {
       # End of flags.
       --)       shift; break ;;
       # Invalid argument.
-      *) LOG_ERROR "Invalid argument $1"; print_usage_and_die; ;;
+      *) LOG ERROR "Invalid argument $1"; print_usage_and_die; ;;
     esac
   done
 }
@@ -133,7 +155,7 @@ function force_flags() {
   mandatory_flags+="${FLAGS_USER}"
   mandatory_flags+="${FLAGS_DRIVE}"
   if [[ "${mandatory_flags}" == *"_UNSET_"* ]]; then
-    LOG_ERROR "Not all mandatory flags are set!"
+    LOG ERROR "Not all mandatory flags are set!"
     print_usage_and_die
   fi
 }
@@ -143,16 +165,56 @@ SCRIPT_PATH="$0"
 parse_flags ${SCRIPT_PATH} ${ALL_FLAGS}
 
 ################################################################################
-# In live image's root
+# In live image.
 ################################################################################
 
-function in_live_image() {
+function in_live_image_non_root() {
   force_flags
 
-  LOG_INFO "Hello from live image!"
+  LOG INFO "Hello from live image as ${USER}!"
   LOG_FLAGS
 
-  LOG_ERROR "Unimplemented, coming soon."
+  LOG INFO "Checking if booted as UEFI..."
+  if ls /sys/firmware/efi/efivars > /dev/null 2>&1; then
+    LOG SUCCESS 2 "OK"
+  else
+    LOG ERROR 2 "Not booted as UEFI."
+    exit 1
+  fi
+
+  LOG INFO "Checking if booted as x86_64 UEFI..."
+  if [[ "$(cat /sys/firmware/efi/fw_platform_size)" == "64" ]]; then
+    LOG SUCCESS 2 "OK"
+  else
+    LOG ERROR 2 "Not booted as x86_64 UEFI."
+    exit 1
+  fi
+
+  LOG INFO "Checking IP connectivity and DNS..."
+  # By scanning port 443 on google.com"
+  if nc -zw1 google.com 443; then
+    LOG SUCCESS 2 "OK"
+  else
+    LOG ERROR 2 "Network is down."
+    exit 1 
+  fi
+
+  if [[ "${USER}" != "root" ]]; then
+    LOG INFO "Handing off to root..."
+    sudo ${SCRIPT_PATH} ${ALL_FLAGS} --mode=LIVE_IMAGE_ROOT
+  else
+    LOG INFO "Already root..."
+    ${SCRIPT_PATH} ${ALL_FLAGS} --mode=LIVE_IMAGE_ROOT
+  fi
+}
+
+function in_live_image_root() {
+  force_flags
+
+  LOG INFO "Hello from live image as ${USER}!"
+  LOG_FLAGS
+
+  LOG ERROR "Unimplemented, coming soon."
   exit 1
 }
 
@@ -163,10 +225,10 @@ function in_live_image() {
 function in_chroot() {
   force_flags
 
-  LOG_INFO "Hello from chroot!"
+  LOG INFO "Hello from chroot!"
   LOG_FLAGS
 
-  LOG_ERROR "Unimplemented, coming soon."
+  LOG ERROR "Unimplemented, coming soon."
   exit 1
 }
 
@@ -177,10 +239,10 @@ function in_chroot() {
 function post_setup() {
   force_flags
 
-  LOG_INFO "Hello from post-setup!"
+  LOG INFO "Hello from post-setup!"
   LOG_FLAGS
 
-  LOG_ERROR "Unimplemented, coming soon."
+  LOG ERROR "Unimplemented, coming soon."
   exit 1
 }
 
@@ -190,18 +252,21 @@ function post_setup() {
 
 function main() {
   case "${FLAGS_MODE}" in
-  LIVE_IMAGE)
-    in_live_image
-    ;;
-  CHROOT)
-    in_chroot
-    ;;
-  POST_SETUP | POST_SETUP_SHOW)
-    post_setup
-    ;;
-  *)
-    LOG_ERROR "Invalid --mode=${FLAGS_MODE}"
-    print_usage_and_die
+    LIVE_IMAGE_NON_ROOT)
+      in_live_image_non_root
+      ;;
+    LIVE_IMAGE_ROOT)
+      in_live_image_root
+      ;;
+    CHROOT)
+      in_chroot
+      ;;
+    POST_SETUP | POST_SETUP_SHOW)
+      post_setup
+      ;;
+    *)
+      LOG ERROR "Invalid --mode=${FLAGS_MODE}"
+      print_usage_and_die
   esac
 }
 
