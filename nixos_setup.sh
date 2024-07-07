@@ -187,7 +187,7 @@ function in_live_image_non_root() {
 
   LOG INFO "Checking IP connectivity and DNS..."
   # By scanning port 443 on google.com"
-  if nc -zw1 google.com 443; then
+  if nc -zw1 google.com 443 > /dev/null 2>&1; then
     LOG SUCCESS 2 "OK"
   else
     LOG ERROR 2 "Network is down."
