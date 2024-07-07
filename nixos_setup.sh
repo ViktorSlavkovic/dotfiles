@@ -223,16 +223,16 @@ function in_live_image_root() {
 
   # TODO: Add encryption option behind a flag.
   LOG INFO "Partitioning ${FLAGS_DRIVE}..."
-  local swap_size="$(_ram_gib_round_pow2)"
-  LOG INFO 2 "RAM size in GiB rounded to the next power of 2 is ${swap_size}GiB."
+  local swap_gib="$(_ram_gib_round_pow2)"
+  LOG INFO 2 "RAM size in GiB rounded to the next power of 2 is ${swap_gib}GiB."
   LOG INFO 2 "Using that as swap size."
   # For some reason parted --script doesn't support using negative numbers to
   # represent offset from the end of the disk, so we're going with multiple
   # parted calls here.
-  parted "${FLAGS_DRIVE}" -- mklabel gpt                                     &&\
+  parted -s "${FLAGS_DRIVE}" mklabel gpt                                     &&\
   parted "${FLAGS_DRIVE}" -- mkpart "efi" fat32 1MiB 512MiB                  &&\
-  parted "${FLAGS_DRIVE}" -- mkpart "root" ext4 512MiB -"${swap_size}"GiB    &&\
-  parted "${FLAGS_DRIVE}" -- mkpart "swap" linux-swap -"${swap_size}"GiB 100 &&\
+  parted "${FLAGS_DRIVE}" -- mkpart "root" ext4 512MiB -"${swap_gib}"GiB     &&\
+  parted "${FLAGS_DRIVE}" -- mkpart "swap" linux-swap -"${swap_gib}"GiB 100% &&\
   parted "${FLAGS_DRIVE}" -- set 1 esp on                                    &&\
   partprobe "${FLAGS_DRIVE}"
   if [ "$?" == "0" ]; then
@@ -250,7 +250,7 @@ function in_live_image_root() {
   LOG INFO "Formatting the root partition as ext4..."
   local root_path="$(lsblk -ln -o PATH,PARTLABEL | grep ${FLAGS_DRIVE} | grep "root" | awk '{print $1}')"
   LOG INFO 2 "root is ${root_path}"
-  mkfs.ext4 -F -L root "${root_path}"
+  mkfs.ext4 -F -L root "${root_path}" > /dev/null 2>&1
   if [ "$?" == "0" ]; then
     LOG SUCCESS 2 "OK"
   else
@@ -261,7 +261,7 @@ function in_live_image_root() {
   LOG INFO "Formatting the efi partition as fat32..."
   local efi_path="$(lsblk -ln -o PATH,PARTLABEL | grep ${FLAGS_DRIVE} | grep "efi" | awk '{print $1}')"
   LOG INFO 2 "efi is ${efi_path}"
-  mkfs.fat -F 32 -n efi "${efi_path}"
+  mkfs.fat -F 32 -n efi "${efi_path}" > /dev/null 2>&1
   if [ "$?" == "0" ]; then
     eLOG SUCCESS 2 "OK"
   else
@@ -272,9 +272,9 @@ function in_live_image_root() {
   LOG INFO  "Formatting the swap partition with mkswap..."
   local swap_path="$(lsblk -ln -o PATH,PARTLABEL | grep ${FLAGS_DRIVE} | grep "swap" | awk '{print $1}')"
   LOG INFO 2 "swap is ${swap_path}"
-  mkswap -L swap "${swap_path}"
+  mkswap -L swap "${swap_path}" > /dev/null 2>&1
   if [ "$?" == "0" ]; then
-    eLOG SUCCESS 2 "OK"
+    LOG SUCCESS 2 "OK"
   else
     LOG ERROR 2 "Failed to format swap."
     exit 1
