@@ -39,9 +39,8 @@ function print_usage_and_die() {
 # Utilities
 ################################################################################
 
-function _log_helper() {
-  # _log_helper color indent msg
-  local color="$1"
+function _log_impl() {
+  local sev="$1"
   shift
   local indent="$1"
   shift
@@ -51,11 +50,11 @@ function _log_helper() {
   local start="I"
   local cbefore=""
   local cafter=""
-  if [[ "${color}" == "error" ]]; then
+  if [[ "${sev}" == "error" ]]; then
     start="E"
     cbefore="\033[0;31m"
     cafter="\033[0m"
-  elif [[ "${color}" == "success" ]]; then
+  elif [[ "${sev}" == "success" ]]; then
     start="S"
     cbefore="\033[0;32m"
     cafter="\033[0m"
@@ -64,45 +63,41 @@ function _log_helper() {
   echo -e "${cbefore}${start}${cafter} [${ts}] ${pad}${cbefore}${@}${cafter}"
 }
 
-function LOG_INFO() {
-  local indent=0
-  if [[ $# -gt 1 ]]; then
-    local indent="$1"
-    shift
-  fi
-  _log_helper "default" "${indent}" "$@"
+function _log_info() {
+  local indent="$1"
+  shift
+  _log_impl "default" "${indent}" "$@"
 }
 
-function LOG_ERROR() {
-  local indent=0
-  if [[ $# -gt 1 ]]; then
-    local indent="$1"
-    shift
-  fi
-  _log_helper "error" "${indent}" "$@"
+function _log_error() {
+  local indent="$1"
+  shift
+  _log_impl "error" "${indent}" "$@"
 }
 
-function LOG_SUCCESS() {
-  local indent=0
-  if [[ $# -gt 1 ]]; then
-    local indent="$1"
-    shift
-  fi
-  _log_helper "success" "${indent}" "$@"
+function _log_success() {
+  local indent="$1"
+  shift
+  _log_impl "success" "${indent}" "$@"
 }
 
 function LOG() {
-  local severity="$1"
+  local sev="$1"
   shift
-  case "${severity}" in
+  local indent=0
+  if [[ $# -gt 1 ]]; then
+    indent="$1"
+    shift
+  fi
+  case "${sev}" in
     SUCCESS)
-      LOG_SUCCESS $@
+      _log_success "${indent}" $@
       ;;
     ERROR)
-      LOG_ERROR $@
+      _log_error "${indent}" $@
       ;;
     *)
-      LOG_INFO $@
+      _log_info "${indent}" $@
   esac
 }
 
