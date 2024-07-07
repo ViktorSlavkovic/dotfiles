@@ -123,8 +123,9 @@ function LOG_FLAGS() {
 }
 
 function parse_flags() {
-  local parsed="$(getopt -a -n nixos_setup \
-                    -l host:,domain:,user:,drive:,eth:,wifi:,mode: -- "$@")"
+  local parsed="$(getopt -a -n nixos_setup                                     \
+                         -l host:,domain:,user:,drive:,eth:,wifi:,mode:        \
+                         -- "$@")"
   if [ "$?" != "0" ]; then
     LOG ERROR "getopt failed to parse flags"
     print_usage_and_die
@@ -205,11 +206,77 @@ function in_live_image_non_root() {
   fi
 }
 
+function _ram_gib_round_pow2() {
+  local gib_ram_pow2=1
+  local ram_bytes="$(free -b | grep 'Mem:' | awk '{print $2}')"
+  for ((;ram_bytes > gib_ram_pow2 * 1024 * 1024 * 1024;)) do
+    ((gib_ram_pow2 *= 2))
+  done
+  echo "${gib_ram_pow2}"
+}
+
 function in_live_image_root() {
   force_flags
 
   LOG INFO "Hello from live image as ${USER}!"
   LOG_FLAGS 2
+
+  # TODO: Add encryption option behind a flag.
+  LOG INFO "Partitioning ${FLAGS_DRIVE}..."
+  local swap_size="$(_ram_gib_round_pow2)"
+  LOG INFO 2 "RAM size in GiB rounded to the next power of 2 is ${swap_size}GiB."
+  LOG INFO 2 "Using that as swap size."
+  parted --script "${FLAGS_DRIVE}"                                               \
+    mklabel gpt                                                                  \
+    mkpart "efi" fat32 1MiB 512MiB                                               \
+    mkpart "root" ext4 512MiB -${swap_size}GiB                                   \
+    mkpart "swap" linux-swap -${swap_size}GiB 100                                \
+    set 1 esp on                                                                 \
+    quit && partprobe "${FLAGS_DRIVE}"
+  if [ "$?" == "0" ]; then
+    LOG SUCCESS 2 "OK"
+  else
+    LOG ERROR 2 "Failed to partition ${FLAGS_DRIVE}."
+    exit 1
+  fi
+
+  # Looks like there's some async flushing/propagation that needs to happen after
+  # parted exits in order for udev and lsblk to know about partlabel, so let's
+  # wait a bit.
+  sleep 5s
+
+  LOG INFO "Formatting the root partition as ext4..."
+  local root_path="$(lsblk -ln -o PATH,PARTLABEL | grep ${FLAGS_DRIVE} | grep "root" | awk '{print $1}')"
+  LOG INFO 2 "root is ${root_path}"
+  mkfs.ext4 -F -L root "${root_path}"
+  if [ "$?" == "0" ]; then
+    LOG SUCCESS 2 "OK"
+  else
+    LOG ERROR 2 "Failed to format root."
+    exit 1
+  fi
+
+  LOG INFO "Formatting the efi partition as fat32..."
+  local efi_path="$(lsblk -ln -o PATH,PARTLABEL | grep ${FLAGS_DRIVE} | grep "efi" | awk '{print $1}')"
+  LOG INFO 2 "efi is ${efi_path}"
+  mkfs.fat -F 32 -n efi "${efi_path}"
+  if [ "$?" == "0" ]; then
+    eLOG SUCCESS 2 "OK"
+  else
+    LOG ERROR 2 "Failed to format efi."
+    exit 1
+  fi
+
+  LOG INFO  "Formatting the swap partition with mkswap..."
+  local swap_path="$(lsblk -ln -o PATH,PARTLABEL | grep ${FLAGS_DRIVE} | grep "swap" | awk '{print $1}')"
+  LOG INFO 2 "swap is ${swap_path}"
+  mkswap -L swap "${swap_path}"
+  if [ "$?" == "0" ]; then
+    eLOG SUCCESS 2 "OK"
+  else
+    LOG ERROR 2 "Failed to format swap."
+    exit 1
+  fi
 
   LOG ERROR "Unimplemented, coming soon."
   exit 1
