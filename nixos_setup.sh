@@ -263,7 +263,7 @@ function in_live_image_root() {
   LOG INFO 2 "efi is ${efi_path}"
   mkfs.fat -F 32 -n efi "${efi_path}" > /dev/null 2>&1
   if [ "$?" == "0" ]; then
-    eLOG SUCCESS 2 "OK"
+    LOG SUCCESS 2 "OK"
   else
     LOG ERROR 2 "Failed to format efi."
     exit 1
