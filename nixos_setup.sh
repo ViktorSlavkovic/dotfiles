@@ -315,8 +315,39 @@ function in_live_image_root() {
     exit 1
   fi
 
-  LOG ERROR "Unimplemented, coming soon."
-  exit 1
+  LOG INFO "Generating nix config boilerplate..."
+  nixos-generate-config --root /mnt
+  if [ "$?" == "0" ]; then
+    LOG INFO 2 "OK"
+  else
+    LOG SUCCESS 2 "Failed to generate nix configs."
+    exit 1
+  fi
+
+  LOG INFO "Fetching my nix config..."
+  curl -L https://dotfiles.viktors.net/configuration.nix -o /mnt/etc/nixos/configuration.nix
+  if [ "$?" == "0" ]; then
+    LOG INFO 2 "OK"
+  else
+    LOG SUCCESS 2 "Failed to fetch my nix config."
+    exit 1
+  fi
+
+  LOG INFO "Running nixos-install..."
+  nixos-install
+  if [ "$?" == "0" ]; then
+    LOG INFO 2 "OK"
+  else
+    LOG SUCCESS 2 "nixos-install failed."
+    exit 1
+  fi
+
+  LOG INFO "Cleaning up..."
+  umount -R /mnt
+  swapoff /dev/disk/by-label/swap
+
+  LOG INFO "Press a key to reboot ..."
+  reboot
 }
 
 ################################################################################
