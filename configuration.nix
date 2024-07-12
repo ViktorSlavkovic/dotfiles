@@ -106,6 +106,7 @@
   users.users.viktors = {
     isNormalUser = true;
     description = "Viktor Slavkovic";
+    group = "viktors";
 
     extraGroups = [
       "networkmanager"
@@ -125,6 +126,8 @@
       pavucontrol
       networkmanagerapplet
       bluetuith
+      # TODO: Just for nixos_setip.sh --mode=POST_SETUP_SHOW
+      terminator
 
       python3
       brave

@@ -290,9 +290,9 @@ function in_live_image_root() {
   mkdir -p /mnt
   mount /dev/disk/by-label/root /mnt
   if [ "$?" == "0" ]; then
-    LOG INFO 2 "OK"
+    LOG SUCCESS 2 "OK"
   else
-    LOG SUCCESS 2 "Failed to mount root."
+    LOG ERROR 2 "Failed to mount root."
     exit 1
   fi
 
@@ -300,45 +300,66 @@ function in_live_image_root() {
   mkdir -p /mnt/boot
   mount -o umask=077 /dev/disk/by-label/efi /mnt/boot
   if [ "$?" == "0" ]; then
-    LOG INFO 2 "OK"
+    LOG SUCCESS 2 "OK"
   else
-    LOG SUCCESS 2 "Failed to mount efi."
+    LOG ERROR 2 "Failed to mount efi."
     exit 1
   fi
 
   LOG INFO "Activating swap..."
   swapon /dev/disk/by-label/swap
   if [ "$?" == "0" ]; then
-    LOG INFO 2 "OK"
+    LOG SUCCESS 2 "OK"
   else
-    LOG SUCCESS 2 "Failed activate swap."
+    LOG ERROR 2 "Failed activate swap."
     exit 1
   fi
 
   LOG INFO "Generating nix config boilerplate..."
   nixos-generate-config --root /mnt
   if [ "$?" == "0" ]; then
-    LOG INFO 2 "OK"
+    LOG SUCCESS 2 "OK"
   else
-    LOG SUCCESS 2 "Failed to generate nix configs."
+    LOG ERROR 2 "Failed to generate nix configs."
     exit 1
   fi
 
   LOG INFO "Fetching my nix config..."
   curl -L https://dotfiles.viktors.net/configuration.nix -o /mnt/etc/nixos/configuration.nix
   if [ "$?" == "0" ]; then
-    LOG INFO 2 "OK"
+    LOG SUCCESS 2 "OK"
   else
-    LOG SUCCESS 2 "Failed to fetch my nix config."
+    LOG ERROR 2 "Failed to fetch my nix config."
     exit 1
   fi
 
   LOG INFO "Running nixos-install..."
   nixos-install
   if [ "$?" == "0" ]; then
-    LOG INFO 2 "OK"
+    LOG SUCCESS 2 "OK"
   else
-    LOG SUCCESS 2 "nixos-install failed."
+    LOG ERROR 2 "nixos-install failed."
+    exit 1
+  fi
+
+  LOG INFO "Copying this script and its whole dir to /mnt/setup..."
+  local this_dir="$(dirname "${SCRIPT_PATH}")"
+  local this_script_basename="$(basename "${SCRIPT_PATH}")"
+  local alien_path="/setup/${this_script_basename}"
+  cp -R "${this_dir}" "/mnt/setup"
+  if [ "$?" == "0" ]; then
+    LOG SUCCESS 2 "OK"
+  else
+    LOG ERROR 2 "Failed to copy myself to /mnt/setup."
+    exit 1
+  fi
+
+  LOG INFO "Entering chroot..."
+  nixos-enter --root /mnt -c bash -- ${alien_path} ${ALL_FLAGS} --mode=CHROOT
+  if [ "$?" == "0" ]; then
+    LOG SUCCESS 2 "OK: Successfully exited chroot."
+  else
+    LOG ERROR 2 "Exited chroot with failure."
     exit 1
   fi
 
@@ -346,7 +367,8 @@ function in_live_image_root() {
   umount -R /mnt
   swapoff /dev/disk/by-label/swap
 
-  LOG INFO "Press a key to reboot ..."
+  LOG SUCCESS "Press a key to reboot ..."
+  read
   reboot
 }
 
@@ -360,8 +382,62 @@ function in_chroot() {
   LOG INFO "Hello from chroot!"
   LOG_FLAGS 2
 
-  LOG ERROR "Unimplemented, coming soon."
-  exit 1
+  # TODO: This is sad because aliceX would pass as alice, but also because there
+  #       isn't a single SoT about where the user name comes from.
+  if [[ -z "$(cat /etc/passwd | awk -F':' '{print $1}' | grep "${FLAGS_USER}")" ]]; then
+    LOG ERROR 2 "User ${FLAGS_USER} doesn't exist. This is likely a mismatch between \
+                 configuration.nix and --user."
+    exit 1
+  fi
+
+  LOG INFO "Enter ${FLAGS_USER}'s password:"
+  passwd "${FLAGS_USER}"
+  if [ "$?" == "0" ]; then
+    LOG SUCCESS 2 "OK"
+  else
+    LOG ERROR 2 "Failed to set ${FLAGS_USER}'s password."
+    exit 1
+  fi
+
+  LOG INFO "Fetching and deploying dotfiles..."
+  cd "/home/${FLAGS_USER}/"
+  LOG INFO 2 "PWD: $PWD"
+
+  LOG INFO 2 "Cloning the git repo..."
+  git clone https://github.com/ViktorSlavkovic/dotfiles.git ./configs/
+  if [ "$?" == "0" ]; then
+    LOG SUCCESS 4 "OK"
+  else
+    LOG ERROR 4 "Failed to git clone."
+    exit 1
+  fi
+
+  LOG INFO 2 "Running distribute.sh..."
+  chmod u+x ./configs/distribute.sh
+  HOME="/home/${FLAGS_USER}" ./configs/distribute.sh
+  if [ "$?" == "0" ]; then
+    LOG SUCCESS 4 "OK"
+  else
+    LOG ERROR 4 "distribute.sh failed"
+    exit 1
+  fi
+
+  LOG INFO 2 "Misc distribute.sh follow-up."
+  touch "./configs/nixos_setup_uninitialized" && \
+  chown -R "${FLAGS_USER}:${FLAGS_USER}" *    && \
+  chown -R "${FLAGS_USER}:${FLAGS_USER}" .*
+  if [ "$?" == "0" ]; then
+    LOG SUCCESS 4 "OK"
+  else
+    LOG ERROR 4 "Failed in one of the misc steps."
+    exit 1
+  fi
+
+  LOG SUCCESS 2 "Done with juggling dotfiles."
+
+  LOG SUCCESS "Press any key to exit chroot ..."
+  read
+  exit
 }
 
 ################################################################################
@@ -371,11 +447,47 @@ function in_chroot() {
 function post_setup() {
   force_flags
 
-  LOG INFO "Hello from post-setup!"
+  LOG INFO "Hello from post-setup (${FLAGS_MODE})!"
   LOG_FLAGS 2
 
-  LOG ERROR "Unimplemented, coming soon."
-  exit 1
+  if [[ ! -f ~/configs/nixos_setup_uninitialized ]]; then
+    LOG SUCCESS "Already initialized, nothing to do here."
+    exit 0
+  fi
+
+  if [[ "${FLAGS_MODE}" != "POST_SETUP_SHOW" ]]; then
+    terminator -m -f -e "$0 --mode=POST_SETUP_SHOW"
+    exit 0
+  fi
+
+  cat << EOM
+██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗
+██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝
+██║ █╗ ██║█████╗  ██║     ██║     ██║   ██║██╔████╔██║█████╗  
+██║███╗██║██╔══╝  ██║     ██║     ██║   ██║██║╚██╔╝██║██╔══╝  
+╚███╔███╔╝███████╗███████╗╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗
+ ╚══╝╚══╝ ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝
+
+EOM
+
+  LOG INFO "Setting up bashrc_implant..."
+  local bashrc_implant_grep="$(cat "${HOME}/.bashrc" | grep "bashrc_implant.sh")"
+  if [[ -z "${bashrc_implant_grep}" ]]; then
+    echo >> "${HOME}/.bashrc"
+    echo "source ~/configs/bashrc_implant.sh" >> "${HOME}/.bashrc"
+    echo >> "${HOME}/.bashrc"
+  fi
+
+  LOG INFO "Removeing /setup..."
+  sudo rm -rf /setup
+  LOG SUCCESS 2 "OK"
+
+  LOG INFO "Removeing ~/configs/arch_setup_uninitialized..."
+  rm -rf ~/configs/arch_setup_uninitialized
+  LOG SUCCESS 2 "OK"
+
+  LOG SUCCESS "Done, press any key to exit ..."
+  read
 }
 
 ################################################################################
