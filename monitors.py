@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 #
 # Copyright 2021 Viktor Slavkovic
 #
@@ -39,7 +39,7 @@ INTERNAL = 'eDP-1'
 def get_screens():
   """Queries sway for the screens JSON and returns it parsed."""
   json_str, _ = subprocess.Popen(
-      ['/usr/bin/swaymsg', '--raw', '--type', 'get_outputs'],
+      ['swaymsg', '--raw', '--type', 'get_outputs'],
       stdout=subprocess.PIPE).communicate()
   return json.loads(json_str)
 
@@ -70,7 +70,7 @@ def build_sway_config(mode, curr_state):
 
   commands = []
   x = 0
-  for out in externals:
+  for out in externals[::-1]:
     commands.append(f'output {out} enable pos {x} 0 transform normal')
     x += curr_state[out]['w']
 

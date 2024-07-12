@@ -267,6 +267,7 @@ EOM
     imagemagick            \
     intel-media-driver     \
     jq                     \
+    kitty                  \
     libva-utils            \
     light                  \
     linux                  \

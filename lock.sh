@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Copyright 2021 Viktor Slavkovic
 #
@@ -22,8 +22,8 @@
 function swaylock_spec() {
   local spec=""
   for out in $(swaymsg -t get_outputs | jq -r '.[].name'); do
-    local raw="/tmp/scrot-raw-${out}.png"
-    local blur="/tmp/scrot-blur-${out}.png"
+    local raw="/tmp/scrot-raw-${out}.jpg"
+    local blur="/tmp/scrot-blur-${out}.jpg"
     grim -o "${out}" "${raw}"
     convert "${raw}" -scale 2.5% -scale 4000% "${blur}"
     rm "${raw}"

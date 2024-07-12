@@ -1,7 +1,6 @@
 set $mod Mod4
 
 # TODO:
-#   * s/terminator/kitty
 #   * s/dmenu/wofi
 #   * s/nm-applet/wofi
 
@@ -26,10 +25,6 @@ bindsym $mod+Shift+q kill
 
 # Enter fullscreen mode for the focused window.
 bindsym $mod+f fullscreen toggle
-
-# Special fullscreen type for broken Chrome + Wayland interaction.
-# See https://tinyurl.com/chrome-ozone-wayland-full.
-bindsym $mod+Shift+f floating toggle; exec ~/configs/chrome_fullscreen_toggle.sh
 
 # Split in horizontal/vertical orientation.
 bindsym $mod+h splith
@@ -155,7 +150,7 @@ input type:keyboard {
 # Keyboard shortucts
 ################################################################################
 
-set $term terminator
+set $term kitty
 set $menu dmenu_path | dmenu -fn "Roboto Mono-14" -nb "#1E1E1E" -sb "#20420a"  \
                      | xargs swaymsg exec --
 
@@ -181,12 +176,12 @@ bindsym $mod+Shift+e exec "swaynag -f 'pango:Roboto Mono 13'                   \
 bindsym $mod+c exec which brave && brave || google-chrome
 
 # Pulse Audio controls.
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume        \
-        '@DEFAULT_SINK@' +5%
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume        \
-        '@DEFAULT_SINK@' -5%
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute                 \
-        '@DEFAULT_SINK@' toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id wpctl set-volume -l 1.5      \
+        @DEFAULT_AUDIO_SINK@ 5%+
+bindsym XF86AudioLowerVolume exec --no-startup-id wpctl set-volume             \
+        @DEFAULT_AUDIO_SINK@ 5%-
+bindsym XF86AudioMute exec --no-startup-id wpctl set-mute                      \
+        @DEFAULT_AUDIO_SINK@ toggle
 
 # Sreen brightness controls.
 bindsym XF86MonBrightnessUp exec light -A 5
@@ -236,10 +231,15 @@ exec swayidle -w                                                               \
 # Startup
 ################################################################################
 
-exec mako
+# TODO: Not needed anymore?
+# exec mako
+
+# TODO: Not needed anymore?
+# exec bash -c "ssh-agent -s -a $SSH_AUTH_SOCK"
+
 exec nm-applet --indicator
-exec bash -c "ssh-agent -s -a $SSH_AUTH_SOCK"
-exec ~/configs/arch_setup.sh --mode POST_SETUP
+
+exec [[ -f ~/configs/arch_setup_uninitialized ]] && ~/configs/arch_setup.sh --mode POST_SETUP
 
 ################################################################################
 
