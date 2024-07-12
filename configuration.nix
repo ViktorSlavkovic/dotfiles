@@ -1,10 +1,10 @@
 # NOTE: This is the initial, completely dummy and likely unsafe nix config.
 #       It's a merge of NixOS-generated config and some LLM sadness to get
 #       started with a window manager and let me wrap up the setup script.
-
+#
 # Edit this configuration file to define what should be installed on
-# your system. Help is available in the configuration.nix(5) man page, on
-# https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, lib, pkgs, ... }:
 
@@ -18,29 +18,12 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "nixos-testing"; # Define your hostname.
-  # Pick only one of the below networking options.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.networkmanager.enable = true;  # Easiest to use and most distros use this by default.
+  networking.hostName = "nixos"; # Define your hostname.
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  # Enable Plasma desktop environment
-  services.displayManager.sddm.enable = true;
-  services.displayManager.sddm.wayland.enable = true;
-  services.desktopManager.plasma6.enable = true;
-
-  # Enable sound
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
-
-  # Enable sound.
-  # hardware.pulseaudio.enable = true;
-  # OR
-  # services.pipewire = {
-  #   enable = true;
-  #   pulse.enable = true;
-  # };
+  # Let networkmanager handle it.
+  networking.networkmanager.enable = true;
+  # Alternatively, enable wireless support via wpa_supplicant.
+  # networking.wireless.enable = true;
 
   # Set your time zone.
   time.timeZone = "Europe/London";
@@ -57,32 +40,142 @@
   #   useXkbConfig = true; # use xkb.options in tty.
   # };
 
-  # Configure keymap in X11
-  services.xserver.xkb.layout = "us";
-  # services.xserver.xkb.options = "eurosign:e,caps:escape";
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "en_US.UTF-8";
+    LC_IDENTIFICATION = "en_US.UTF-8";
+    LC_MEASUREMENT = "en_US.UTF-8";
+    LC_MONETARY = "en_US.UTF-8";
+    LC_NAME = "en_US.UTF-8";
+    LC_NUMERIC = "en_US.UTF-8";
+    LC_PAPER = "en_US.UTF-8";
+    LC_TELEPHONE = "en_US.UTF-8";
+    LC_TIME = "en_US.UTF-8";
+  };
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  services.libinput.enable = true;
+  # Enable the X11 windowing system.
+  services.xserver.enable = true;
+
+  # Use GDM as dsiplay manager / greeter.
+  services.xserver.displayManager.gdm.enable = true;
+
+  # Enable the GNOME Desktop Environment.
+  # services.xserver.desktopManager.gnome.enable = true;
+
+  # Configure keymap in X11
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "";
+  };
+
+  # Enable CUPS to print documents.
+  # services.printing.enable = true;
+
+  # Enable sound with pipewire.
+  hardware.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    # alsa.support32Bit = true;
+    pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    #jack.enable = true;
+
+    # use the example session manager (no others are packaged yet so this is enabled by default,
+    # no need to redefine it in your config for now)
+    #media-session.enable = true;
+
+    wireplumber.extraConfig = {
+      "monitor.bluez.properties" = {
+          "bluez5.enable-sbc-xq" = true;
+          "bluez5.enable-msbc" = true;
+          "bluez5.enable-hw-volume" = true;
+          "bluez5.roles" = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
+      };
+    };
+  };
+
+  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  services.blueman.enable = true;
+
+  # Enable touchpad support (enabled default in most desktopManager-s).
+  # services.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.alice = {
+  users.users.viktors = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "audio" "video" ]; # wheel enables ‘sudo’ for the user.
+    description = "Viktor Slavkovic";
+
+    extraGroups = [
+      "networkmanager"
+      "video"              # for light (for swaywm brightness)
+      "wheel"
+    ];
+
     packages = with pkgs; [
-      firefox
-      tree
+      grim # screenshot functionality
+      # slurp # screenshot functionality
+      wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
+      mako # notification system developed by swaywm maintainer
+      swaylock
+      imagemagick_light
+      kitty
+      jq
+      pavucontrol
+      networkmanagerapplet
+      bluetuith
+
+      python3
+      brave
+      cryfs
+      git
+      google-chrome
+      nixpkgs-fmt
+      obsidian
+      ranger
+      tmux
+      vim
+      vlc
+      vscode
     ];
   };
 
+  fonts.packages = with pkgs; [
+    font-awesome
+    noto-fonts
+    noto-fonts-cjk
+    noto-fonts-color-emoji
+    noto-fonts-emoji
+    roboto
+    roboto-mono
+    ubuntu_font_family
+  ];
+
   # Allow the user to use sudo
-  security.sudo.enable = true;
-  security.sudo.wheelNeedsPassword = false;
+  # security.sudo.enable = true;
+  # security.sudo.wheelNeedsPassword = false;
+
+  security.pam.services.swaylock.fprintAuth = false;
+
+  programs.light.enable = true;
+  programs.waybar.enable = true;
+  programs.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+  };
+
+  # Install firefox.
+  programs.firefox.enable = true;
+
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     firefox
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    vim
     wget
   ];
 
