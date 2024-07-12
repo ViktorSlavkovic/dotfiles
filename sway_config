@@ -189,10 +189,10 @@ bindsym XF86MonBrightnessDown exec light -U 5
 
 # Dock
 bindsym $mod+p exec ~/configs/monitors.py no-internal-normal                   \
-                      > ~/configs/sway_monitor_setup                           \
+                      > /tmp/sway_monitor_setup                                \
                     && swaymsg reload
 bindsym $mod+Shift+p exec ~/configs/monitors.py internal-90ccw                 \
-                      > ~/configs/sway_monitor_setup                           \
+                      > /tmp/sway_monitor_setup                                \
                     && swaymsg reload
 
 # Lock screen.
@@ -211,7 +211,8 @@ bindsym $mod+b exec blueman-manager
 output * bg ~/configs/wallpaper.jpg fill
 
 # Monitor setup.
-include ~/configs/sway_monitor_setup
+exec [[ ! -f /tmp/sway_monitor_setup ]] && ~/configs/monitors.py "all-normal" > /tmp/sway_monitor_setup
+include /tmp/sway_monitor_setup
 
 # Hint: swaymsg -t get_outputs
 # Hint: output HDMI-A-1 resolution 1920x1080 position 1920,0

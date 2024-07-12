@@ -38,10 +38,6 @@ ln -sf "${script_dir}/waybar_config.json" "${HOME}/.config/waybar/config"
 ln -sf "${script_dir}/waybar_style.css"   "${HOME}/.config/waybar/style.css"
 ln -sf "${script_dir}/tmux_config"        "${HOME}/.tmux.conf"
 
-sudo cp -rf "${script_dir}/sway_shell.sh" /usr/bin/sway_shell.sh
-sudo cp -rf "${script_dir}/sway_shell.desktop" /usr/share/wayland-sessions/sway_shell.desktop
-sudo chmod o+x /usr/bin/sway_shell.sh
-
 if [[ -f "${HOME}/.bashrc" ]]; then
   bashrc_implant_grep="$(cat "${HOME}/.bashrc" | grep "bashrc_implant.sh")"
   if [[ -z "${bashrc_implant_grep}" ]]; then
