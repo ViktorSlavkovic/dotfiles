@@ -103,6 +103,7 @@
   # services.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.groups.viktors = {};
   users.users.viktors = {
     isNormalUser = true;
     description = "Viktor Slavkovic";
