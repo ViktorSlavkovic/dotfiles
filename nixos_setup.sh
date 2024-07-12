@@ -297,8 +297,8 @@ function in_live_image_root() {
   fi
 
   LOG INFO "Mount efi..."
-  mkdir -p /mnt/efi
-  mount /dev/disk/by-label/efi /mnt/efi
+  mkdir -p /mnt/boot
+  mount -o umask=077 /dev/disk/by-label/efi /mnt/boot
   if [ "$?" == "0" ]; then
     LOG INFO 2 "OK"
   else
