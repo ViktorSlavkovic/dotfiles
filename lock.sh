@@ -22,9 +22,9 @@
 function swaylock_spec() {
   local spec=""
   for out in $(swaymsg -t get_outputs | jq -r '.[].name'); do
-    local raw="/tmp/scrot-raw-${out}.jpg"
-    local blur="/tmp/scrot-blur-${out}.jpg"
-    grim -o "${out}" "${raw}"
+    local raw="/tmp/scrot-raw-${out}.jpeg"
+    local blur="/tmp/scrot-blur-${out}.jpeg"
+    grim -t jpeg -o "${out}" "${raw}"
     convert "${raw}" -scale 2.5% -scale 4000% "${blur}"
     rm "${raw}"
     spec="${spec} --image=${out}:${blur}"
