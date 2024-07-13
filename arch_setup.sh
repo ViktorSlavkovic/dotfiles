@@ -28,7 +28,7 @@ function print_usage_and_die() {
   echo "This script automates installation of Arch Linux (https://archlinux.org/) in a  "
   echo "way that's only somewhat generic. One can tweak the user name, host name, etc,  "
   echo "but the software stack and configuration is baked in and geared towards the     "
-  echo "author's needs.                                                                          "
+  echo "author's needs.                                                                 "
   echo "It's supposed to be run from the Arch installer live image and it will do the   "
   echo "basic setup, including disk formatting, and fetch the recommended packages and  "
   echo "configs. In this process, the script will replicte and invoke itself in         "
@@ -304,8 +304,8 @@ EOM
   fi
 
   LOG INFO "Mount efi..."
-  mkdir -p /mnt/boot
-  mount -o umask=077 /dev/disk/by-label/efi /mnt/boot
+  mkdir -p /mnt/efi
+  mount -o umask=077 /dev/disk/by-label/efi /mnt/efi
   if [ "$?" == "0" ]; then
     LOG SUCCESS 2 "OK"
   else
@@ -484,7 +484,7 @@ EOM
   LOG INFO "Setting up locale..."
   locale-gen && \
   echo "LANG=en_US.UTF-8" >> /etc/locale.conf
-  if [ "$?" != "0" ]; then
+  if [ "$?" == "0" ]; then
     LOG SUCCESS 2 "OK"
   else
     LOG ERROR 2 "Failed to set locale."
