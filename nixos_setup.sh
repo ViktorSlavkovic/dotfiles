@@ -26,17 +26,25 @@ function print_usage_and_die() {
   echo "  POST_SETUP          - Execute after the setup, on first login as --user.      "
   echo "  POST_SETUP_SHOW     - Same as above, just in a visible console.               "
   echo "                                                                                "
-  echo "This script automates installation of NixOS (https://nixos.org) on my systems.  "
+  echo "This script automates installation of NixOS (https://nixos.org) in a way that's "
+  echo "only somewhat generic. One can tweak the user name, host name, etc, but the     "
+  echo "software stack and configuration is baked in and geared towards the author's    "
+  echo "needs.                                                                          "
   echo "It's supposed to be run from the NixOS minimal ISO image and it will do the     "
-  echo "basic setup, including disk formatting, and fetch my NixOS and other configs.   "
+  echo "basic setup, including disk formatting, and fetch the recommended packages and  "
+  echo "configs. In this process, the script will replicte and invoke itself in         "
+  echo "different environemnts (live image, new system chroot and post-setup).          "
   echo "                                                                                "
   echo "This script is also available from nixos-setup.viktors.net.                     "
+  echo "                                                                                "
+  echo "Copyright (c) 2024 Viktor Slavkovic                                             "
+  echo "Licensed under the Apache License, Version 2.0                                  "
   echo "                                                                                "
   exit 1
 }
 
 ################################################################################
-# Utilities
+# Logging utilities.
 ################################################################################
 
 function _log_impl() {
@@ -102,14 +110,13 @@ function LOG() {
 }
 
 ################################################################################
-# Flag parsing
+# Flag parsing.
 ################################################################################
 
 FLAGS_HOST="_UNSET_"
 FLAGS_DOMAIN="_UNSET_"
 FLAGS_USER="_UNSET_"
 FLAGS_DRIVE="_UNSET_"
-# Values: LIVE_IMAGE_NON_ROOT, CHROOT, POST_SETUP, POST_SETUP_SHOW
 FLAGS_MODE="LIVE_IMAGE_NON_ROOT"
 
 function LOG_FLAGS() {
@@ -373,7 +380,7 @@ function in_live_image_root() {
 }
 
 ################################################################################
-# In chroot
+# In chroot.
 ################################################################################
 
 function in_chroot() {
@@ -441,7 +448,7 @@ function in_chroot() {
 }
 
 ################################################################################
-# Post setup
+# Post setup.
 ################################################################################
 
 function post_setup() {
@@ -489,7 +496,7 @@ EOM
 }
 
 ################################################################################
-# Assemble
+# Assemble.
 ################################################################################
 
 function main() {
