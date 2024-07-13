@@ -211,7 +211,8 @@ bindsym $mod+b exec blueman-manager
 output * bg ~/configs/wallpaper.jpg fill
 
 # Monitor setup.
-exec [[ ! -f /tmp/sway_monitor_setup ]] && ~/configs/monitors.py "all-normal" > /tmp/sway_monitor_setup
+exec [[ ! -f /tmp/sway_monitor_setup ]] &&                                     \
+     ~/configs/monitors.py "all-normal" > /tmp/sway_monitor_setup
 include /tmp/sway_monitor_setup
 
 # Hint: swaymsg -t get_outputs
@@ -240,8 +241,10 @@ exec swayidle -w                                                               \
 
 exec nm-applet --indicator
 
-exec [[ -f ~/configs/arch_setup_uninitialized ]] && ~/configs/arch_setup.sh --mode POST_SETUP
-exec [[ -f ~/configs/nixos_setup_uninitialized ]] && ~/configs/nixos_setup.sh --mode POST_SETUP > /tmp/post_setup_debug 2>&1
+exec [[ -f ~/configs/arch_setup_uninitialized ]] &&                            \
+     ~/configs/arch_setup.sh --mode POST_SETUP
+exec [[ -f ~/configs/nixos_setup_uninitialized ]] &&                           \
+     ~/configs/nixos_setup.sh --mode POST_SETUP
 
 ################################################################################
 
