@@ -127,8 +127,6 @@
       pavucontrol
       networkmanagerapplet
       bluetuith
-      # TODO: Just for nixos_setip.sh --mode=POST_SETUP_SHOW
-      terminator
 
       python3
       brave
@@ -179,6 +177,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     firefox
+    git
     vim
     wget
   ];

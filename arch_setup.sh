@@ -293,7 +293,6 @@ EOM
     swaybg                 \
     swayidle               \
     swaylock               \
-    terminator             \
     tmux                   \
     ttf-droid              \
     ttf-font-awesome       \
@@ -527,7 +526,7 @@ function post_setup() {
   fi
 
   if [[ "${FLAGS_MODE}" != "POST_SETUP_SHOW" ]]; then
-    terminator -m -f -e "$0 --mode=POST_SETUP_SHOW"
+    kitty --hold --start-as=fullscreen sh "$0" --mode=POST_SETUP_SHOW
     exit 0
   fi
 

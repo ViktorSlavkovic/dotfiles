@@ -445,10 +445,7 @@ function in_chroot() {
 ################################################################################
 
 function post_setup() {
-  force_flags
-
   LOG INFO "Hello from post-setup (${FLAGS_MODE})!"
-  LOG_FLAGS 2
 
   if [[ ! -f ~/configs/nixos_setup_uninitialized ]]; then
     LOG SUCCESS "Already initialized, nothing to do here."
@@ -456,11 +453,12 @@ function post_setup() {
   fi
 
   if [[ "${FLAGS_MODE}" != "POST_SETUP_SHOW" ]]; then
-    terminator -m -f -e "$0 --mode=POST_SETUP_SHOW"
+    kitty --hold --start-as=fullscreen sh "$0" --mode=POST_SETUP_SHOW
     exit 0
   fi
 
   cat << EOM
+
 ██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗
 ██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝
 ██║ █╗ ██║█████╗  ██║     ██║     ██║   ██║██╔████╔██║█████╗  
@@ -478,12 +476,12 @@ EOM
     echo >> "${HOME}/.bashrc"
   fi
 
-  LOG INFO "Removeing /setup..."
+  LOG INFO "Removing /setup..."
   sudo rm -rf /setup
   LOG SUCCESS 2 "OK"
 
-  LOG INFO "Removeing ~/configs/arch_setup_uninitialized..."
-  rm -rf ~/configs/arch_setup_uninitialized
+  LOG INFO "Removing nixos_setup_uninitialized..."
+  rm -rf ~/configs/nixos_setup_uninitialized
   LOG SUCCESS 2 "OK"
 
   LOG SUCCESS "Done, press any key to exit ..."

@@ -241,7 +241,7 @@ exec swayidle -w                                                               \
 exec nm-applet --indicator
 
 exec [[ -f ~/configs/arch_setup_uninitialized ]] && ~/configs/arch_setup.sh --mode POST_SETUP
-exec [[ -f ~/configs/nixos_setup_uninitialized ]] && ~/configs/nixos_setup.sh --mode POST_SETUP
+exec [[ -f ~/configs/nixos_setup_uninitialized ]] && ~/configs/nixos_setup.sh --mode POST_SETUP > /tmp/post_setup_debug 2>&1
 
 ################################################################################
 
