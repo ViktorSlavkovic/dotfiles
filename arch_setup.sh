@@ -482,7 +482,9 @@ EOM
   LOG SUCCESS 2 "OK"
 
   LOG INFO "Setting up locale..."
-  if localectl set-locale LANG=en_US.UTF-8; then
+  locale-gen && \
+  echo "LANG=en_US.UTF-8" >> /etc/locale.conf
+  if [ "$?" != "0" ]; then
     LOG SUCCESS 2 "OK"
   else
     LOG ERROR 2 "Failed to set locale."
