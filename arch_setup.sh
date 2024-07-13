@@ -116,7 +116,7 @@ FLAGS_HOST="_UNSET_"
 FLAGS_DOMAIN="_UNSET_"
 FLAGS_USER="_UNSET_"
 FLAGS_DRIVE="_UNSET_"
-FLAGS_MODE="LIVE_IMAGE_NON_ROOT"
+FLAGS_MODE="LIVE_IMAGE"
 
 function LOG_FLAGS() {
   local indent="$1"
@@ -228,30 +228,7 @@ EOM
     exit 1 
   fi
 
-  echo "Partition ${FLAGS_DRIVE}"
-  # TODO: Add encryption option
-  # TODO: Get RAM size via free -gt | tail -n1 | awk ‘{print $2}’ and use it to
-  #       compute swap size.
-  parted --script "${FLAGS_DRIVE}"                                               \
-    mklabel gpt                                                                  \
-    mkpart "efi" fat32 1MiB 513MiB                                               \
-    set 1 esp on                                                                 \
-    mkpart "swap" linux-swap 513MiB 16384MiB                                     \
-    mkpart "root" ext4 16384MiB 100%                                             \
-    quit && partprobe "${FLAGS_DRIVE}"
-  if [ "$?" == "0" ]; then
-    echo_spaced 2 "OK"
-  else
-    echo_err_spaced 2 "Failed to partition ${FLAGS_DRIVE}"
-    exit 1
-  fi
-
-  # Looks like there's some async flushing/propagation that needs to happen after
-  # parted exits in order for udev and lsblk to know about partlabel, so let's
-  # wait a bit.
-  sleep 5s
-
-# TODO: Add encryption option behind a flag.
+  # TODO: Add encryption option behind a flag.
   LOG INFO "Partitioning ${FLAGS_DRIVE}..."
   local swap_gib="$(_ram_gib_round_pow2)"
   LOG INFO 2 "RAM size in GiB rounded to the next power of 2 is ${swap_gib}GiB."
