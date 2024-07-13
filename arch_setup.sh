@@ -357,7 +357,6 @@ EOM
     jq                     \
     kitty                  \
     libva-utils            \
-    light                  \
     linux                  \
     linux-firmware         \
     mako                   \
@@ -695,6 +694,7 @@ EOM
   LOG INFO "Installing extra stuff with yay..."
   yay -S --noconfirm       \
     brave-bin              \
+    light                  \
     udevil                 \
     visual-studio-code-bin
   if [ "$?" == "0" ]; then
