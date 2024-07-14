@@ -169,10 +169,10 @@ bindsym $mod+Shift+r reload
 bindsym $mod+Shift+e exec "swaynag -f 'pango:Roboto Mono 13'                   \
                            -m 'Power Options'                                  \
                            -Z ' Log Out '   'swaymsg exit'                     \
-                           -Z ' Restart '   'systemctl reboot'                 \
-                           -Z ' Sleep '     '~/configs/lock.sh suspend'        \
-                           -Z ' Hibernate ' '~/configs/lock.sh hibernate'      \
-                           -Z ' Power Off ' 'systemctl poweroff'"
+                           -Z ' Restart '   '~/configs/power.sh RESTART'       \
+                           -Z ' Sleep '     '~/configs/power.sh SLEEP'         \
+                           -Z ' Hibernate ' '~/configs/power.sh HIBERNATE'     \
+                           -Z ' Power Off ' '~/configs/power.sh POWEROFF'"
 
 # Give brave precedence over chrome, if installed.
 bindsym $mod+c exec which brave && brave || google-chrome
