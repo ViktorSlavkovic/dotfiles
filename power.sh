@@ -52,7 +52,7 @@ function main() {
       systemctl poweroff
       ;;
     RESTART)
-      systemctl restart
+      systemctl reboot
       ;;
     SLEEP)
       lock_screen &
