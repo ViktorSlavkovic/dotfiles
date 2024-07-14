@@ -180,7 +180,7 @@ set $power cmd=$(echo -e "POWEROFF\nHIBERNATE\nSLEEP\nRESTART\nLOGOUT"    | \
 bindsym $mod+Shift+e exec $power
 
 # Lock screen.
-bindsym $mod+Shift+z exec ~/configs/lock.sh
+bindsym $mod+Shift+z exec ~/configs/power.sh LOCK
 
 # Start a terminal.
 bindsym $mod+Return exec kitty
