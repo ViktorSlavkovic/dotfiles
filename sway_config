@@ -148,8 +148,7 @@ input type:keyboard {
 # Keyboard shortucts
 ################################################################################
 
-set $term kitty
-
+# Show launcher menu.
 # palette: https://coolors.co/fffcf2-ccc5b9-403d39-252422-eb5e28
 set $menu bemenu-run --ignorecase --no-cursor --prompt ""                      \
                      --fn "Roboto Mono-16"                                     \
@@ -162,23 +161,32 @@ set $menu bemenu-run --ignorecase --no-cursor --prompt ""                      \
                      --cb "#eb5e28" --cf "#eeebe1"                             \
                      --hb "#eb5e28" --hf "#403d39"
 
-# Start menu
 bindsym $mod+d exec $menu
 
-# Start a terminal
-bindsym $mod+Return exec $term
+# Show power options.
+set $power cmd=$(echo -e "POWEROFF\nHIBERNATE\nSLEEP\nRESTART\nLOGOUT"    | \
+           bemenu --no-exec --ignorecase --no-cursor --prompt ""            \
+                  --fn "Roboto Mono-16"                                     \
+                  --center --list 20 down -W 0.1 -H 30 --scrollbar hide     \
+                  --border 3 --border-radius 0                              \
+                  --border-radius 0 --bdr "#252422"                         \
+                  --nb "#403d39" --nf "#fffcf2"                             \
+                  --ab "#403d39" --af "#fffcf2"                             \
+                  --fb "#fffcf2" --ff "#252422"                             \
+                  --cb "#eb5e28" --cf "#eeebe1"                             \
+                  --hb "#eb5e28" --hf "#403d39")                         && \
+           [[ ! -z "${cmd}" ]] && ~/configs/power.sh "${cmd}"
+
+bindsym $mod+Shift+e exec $power
+
+# Lock screen.
+bindsym $mod+Shift+z exec ~/configs/lock.sh
+
+# Start a terminal.
+bindsym $mod+Return exec kitty
 
 # Reload the configuration file
 bindsym $mod+Shift+r reload
-
-# Show power options.
-bindsym $mod+Shift+e exec "swaynag -f 'pango:Roboto Mono 13'                   \
-                           -m 'Power Options'                                  \
-                           -Z ' Log Out '   'swaymsg exit'                     \
-                           -Z ' Restart '   '~/configs/power.sh RESTART'       \
-                           -Z ' Sleep '     '~/configs/power.sh SLEEP'         \
-                           -Z ' Hibernate ' '~/configs/power.sh HIBERNATE'     \
-                           -Z ' Power Off ' '~/configs/power.sh POWEROFF'"
 
 # Give brave precedence over chrome, if installed.
 bindsym $mod+c exec which brave && brave || google-chrome
@@ -202,11 +210,6 @@ bindsym $mod+p exec ~/configs/monitors.py no-internal-normal                   \
 bindsym $mod+Shift+p exec ~/configs/monitors.py internal-90ccw                 \
                       > /tmp/sway_monitor_setup                                \
                     && swaymsg reload
-
-# Lock screen.
-bindsym $mod+Shift+s exec ~/configs/lock.sh suspend
-bindsym $mod+Shift+h exec ~/configs/lock.sh hibernate
-bindsym $mod+Shift+z exec ~/configs/lock.sh
 
 # Blueman manager
 bindsym $mod+b exec blueman-manager

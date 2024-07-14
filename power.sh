@@ -16,7 +16,7 @@
 
 function print_usage_and_die() {
   echo "                                                                                "
-  echo "Usage: power (POWEROFF|SLEEP|HIBERNATE|LOCK|LOGOUT)                             "
+  echo "Usage: power (POWEROFF|RESTART|SLEEP|HIBERNATE|LOCK|LOGOUT)                     "
   echo "                                                                                "
   echo "This script merges lock screen and power controls under one command that's easy "
   echo "to invoke from display managers/menus.                                          "
@@ -51,6 +51,9 @@ function main() {
     POWEROFF)
       systemctl poweroff
       ;;
+    RESTART)
+      systemctl restart
+      ;;
     SLEEP)
       lock_screen &
       sleep 3s
@@ -63,6 +66,9 @@ function main() {
       ;;
     LOCK)
       lock_screen &
+      ;;
+    LOGOUT)
+      swaymsg exit
       ;;
     *)
       print_usage_and_die
