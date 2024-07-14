@@ -1,9 +1,5 @@
 set $mod Mod4
 
-# TODO:
-#   * s/dmenu/wofi
-#   * s/nm-applet/wofi
-
 ################################################################################
 #  Basic window management
 ################################################################################
@@ -153,8 +149,18 @@ input type:keyboard {
 ################################################################################
 
 set $term kitty
-set $menu dmenu_path | dmenu -fn "Roboto Mono-14" -nb "#1E1E1E" -sb "#20420a"  \
-                     | xargs swaymsg exec --
+
+# palette: https://coolors.co/fffcf2-ccc5b9-403d39-252422-eb5e28
+set $menu bemenu-run --ignorecase --no-cursor --prompt ""                      \
+                     --fn "Roboto Mono-16"                                     \
+                     --center --list 20 down -W 0.3 -H 30 --scrollbar hide     \
+                     --border 3 --border-radius 0                              \
+                     --border-radius 0 --bdr "#252422"                         \
+                     --nb "#403d39" --nf "#fffcf2"                             \
+                     --ab "#403d39" --af "#fffcf2"                             \
+                     --fb "#fffcf2" --ff "#252422"                             \
+                     --cb "#eb5e28" --cf "#eeebe1"                             \
+                     --hb "#eb5e28" --hf "#403d39"
 
 # Start menu
 bindsym $mod+d exec $menu

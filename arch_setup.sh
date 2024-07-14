@@ -337,11 +337,11 @@ EOM
     alsa-ucm-conf          \
     base                   \
     base-devel             \
+    bemenu                 \
     blueman                \
     bluez                  \
     bluez-utils            \
     docker                 \
-    dmenu                  \
     efibootmgr             \
     encfs                  \
     firefox                \

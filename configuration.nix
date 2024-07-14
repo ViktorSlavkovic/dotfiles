@@ -127,6 +127,7 @@
       pavucontrol
       networkmanagerapplet
       bluetuith
+      bemenu
 
       python3
       brave
