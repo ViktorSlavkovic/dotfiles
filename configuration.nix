@@ -10,7 +10,8 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
+      # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
 
@@ -61,6 +62,10 @@
   # Enable the GNOME Desktop Environment.
   # services.xserver.desktopManager.gnome.enable = true;
 
+  programs.hyprland.enable = true;
+  # Optional, hint electron apps to use wayland:
+  # environment.sessionVariables.NIXOS_OZONE_WL = "1";
+
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";
@@ -87,10 +92,10 @@
 
     wireplumber.extraConfig = {
       "monitor.bluez.properties" = {
-          "bluez5.enable-sbc-xq" = true;
-          "bluez5.enable-msbc" = true;
-          "bluez5.enable-hw-volume" = true;
-          "bluez5.roles" = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
+        "bluez5.enable-sbc-xq" = true;
+        "bluez5.enable-msbc" = true;
+        "bluez5.enable-hw-volume" = true;
+        "bluez5.roles" = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
       };
     };
   };
@@ -103,7 +108,7 @@
   # services.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.groups.viktors = {};
+  users.groups.viktors = { };
   users.users.viktors = {
     isNormalUser = true;
     description = "Viktor Slavkovic";
@@ -111,7 +116,7 @@
 
     extraGroups = [
       "networkmanager"
-      "video"              # for light (for swaywm brightness)
+      "video" # for light (for swaywm brightness)
       "wheel"
     ];
 
@@ -141,8 +146,12 @@
       vim
       vlc
       vscode
+
+      udevil
     ];
   };
+
+  programs.udevil.enable = true;
 
   fonts.packages = with pkgs; [
     font-awesome
@@ -154,6 +163,9 @@
     roboto-mono
     ubuntu_font_family
   ];
+
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = [ "viktors" ];
 
   # Allow the user to use sudo
   # security.sudo.enable = true;
