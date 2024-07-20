@@ -29,13 +29,16 @@ fi
 
 chmod u+x "${script_dir}"/*.{sh,py}
 
+mkdir -p "${HOME}/.config/mako"
 mkdir -p "${HOME}/.config/sway"
 mkdir -p "${HOME}/.config/terminator"
+mkdir -p "${HOME}/.config/tmux"
 mkdir -p "${HOME}/.config/waybar"
+ln -sf "${script_dir}/mako_config"        "${HOME}/.config/mako/config"
 ln -sf "${script_dir}/sway_config"        "${HOME}/.config/sway/config"
+ln -sf "${script_dir}/tmux_config"        "${HOME}/.config/tmux/tmux.conf"
 ln -sf "${script_dir}/waybar_config.json" "${HOME}/.config/waybar/config"
 ln -sf "${script_dir}/waybar_style.css"   "${HOME}/.config/waybar/style.css"
-ln -sf "${script_dir}/tmux_config"        "${HOME}/.tmux.conf"
 
 if [[ -f "${HOME}/.bashrc" ]]; then
   bashrc_implant_grep="$(cat "${HOME}/.bashrc" | grep "bashrc_implant.sh")"

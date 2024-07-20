@@ -1,0 +1,22 @@
+padding=10
+margin=10
+border-size=3
+border-radius=10
+icon-location=right
+max-icon-size=32
+anchor=bottom-right
+text-alignment=center
+
+# Color palette: https://coolors.co/fffcf2-ccc5b9-403d39-252422-eb5e28
+background-color=#252422AA
+text-color=#FFFCF2AA
+border-color=#403D39AA
+progress-color=#EB5E28
+
+# Overrides for critical notifications: top-right and no transparency.
+[urgency=critical]
+anchor=top-right
+background-color=#252422
+text-color=#FFFCF2
+border-color=#403D39AA
+progress-color=#EB5E28
