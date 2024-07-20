@@ -40,17 +40,17 @@ function main() {
       systemctl reboot
       ;;
     SLEEP)
-      hyprlock --immediate
-      sleep 3s
+      hyprlock --immediate &
+      sleep 1s
       systemctl suspend
       ;;
     HIBERNATE)
-      hyprlock --immediate
-      sleep 3s
+      hyprlock --immediate &
+      sleep 1s
       systemctl hibernate
       ;;
     LOCK)
-      hyprlock
+      hyprlock --immediate
       ;;
     LOGOUT)
       swaymsg exit
