@@ -383,6 +383,7 @@ EOM
     tmux                   \
     ttf-droid              \
     ttf-font-awesome       \
+    ttf-inconsolata        \
     ttf-opensans           \
     ttf-roboto             \
     ttf-roboto-mono        \

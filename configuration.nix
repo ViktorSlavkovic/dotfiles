@@ -133,6 +133,7 @@
       networkmanagerapplet
       bluetuith
       bemenu
+      swaybg
 
       python3
       brave
@@ -155,6 +156,7 @@
 
   fonts.packages = with pkgs; [
     font-awesome
+    inconsolata
     noto-fonts
     noto-fonts-cjk
     noto-fonts-color-emoji
