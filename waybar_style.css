@@ -1,29 +1,31 @@
 /* Palette: https://coolors.co/fffcf2-ccc5b9-403d39-252422-eb5e28 */
 
 * {
-  border: none;
+  font-family: "Inconsolata";
   font-size: 0.95em;
+  font-stretch: expanded;
+  font-weight: 700;
+
+  border: none;
   min-height: 0;
 }
 
 window#waybar {
-  background: transparent;
-  color: rgba(255, 252, 242, 1.0);
+  background-color: transparent;
+  color: rgba(255, 252, 242, 1.0);  /* #FFFCF2 */
 }
 
 .modules-right,
 .modules-left,
 .modules-center {
-  font-family: "Roboto Mono", "Font Awesome", Arial, sans-serif;
-  font-stretch: condensed;
-  background-color: rgba(37, 36, 34, 1.0);
-
   border-radius: 1em;
+  margin: 0.2em;
+  padding-bottom: 0.2em;
   padding-left: 0.4em;
   padding-right: 0.4em;
   padding-top: 0.2em;
-  padding-bottom: 0.2em;
-  margin: 0.2em;
+
+  background-color: rgba(37, 36, 34, 1.0);  /* #252422 */
 }
 
 .modules-center {
@@ -31,61 +33,73 @@ window#waybar {
 }
 
 #workspaces button {
-  padding-left: 0.2em;
-  padding-right: 0.2em;
+  font-weight: 900;
+
+  border-radius: 1em;
   margin-left: 0.2em;
   margin-right: 0.2em;
-  border-radius: 1em;
-  font-weight: bold;
-  color: rgba(255, 252, 242, 0.7);
-  background: rgba(235, 94, 40, 0.7);
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+
+  background-color: rgba(235, 94, 40, 0.7);  /* #EB5E28 */
+  color: rgba(255, 252, 242, 0.7);  /* #FFFCF2 */
 }
 
 #workspaces button.focused {
-  padding-left: 0.2em;
-  padding-right: 0.2em;
   margin-left: 0.2em;
   margin-right: 0.2em;
-  color: rgba(255, 252, 242, 1.0);
-  background: rgba(235, 94, 40, 1.0);
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+
+  background-color: rgba(235, 94, 40, 1.0);  /* #EB5E28 */
+  color: rgba(255, 252, 242, 1.0);  /* #FFFCF2 */
 }
 
 #clock {
-  padding-left: 0.4em;
-  padding-right: 0.4em;
+  border-radius: 1em;
   margin-left: 0.4em;
   margin-right: 0.4em;
-  border-radius: 1em;
-  font-weight: 600;
-  color: rgba(255, 252, 242, 1.0);
-  background: rgba(64, 61, 57, 1.0);
+  padding-left: 0.4em;
+  padding-right: 0.4em;
+
+  background-color: rgba(64, 61, 57, 1.0);  /* #403D39 */
+  color: rgba(255, 252, 242, 1.0);  /* #FFFCF2 */
 }
 
 #mode {
+  font-weight: 900;
+
+  border-radius: 1em;
+  border: none;
   margin-left: 0.2em;
   margin-right: 0.2em;
-  padding-left: 0.8em;
+  padding-left: 0.6em;
   padding-right: 0.6em;
-  border-radius: 1em;
-  font-weight: 600;
-  border: none;
-  color: rgba(235, 94, 40, 1.0);
-  background: rgba(37, 36, 34, 1.0);
+
+  background-color: rgba(37, 36, 34, 1.0);  /* #252422 */
+  color: rgba(235, 94, 40, 1.0);  /* #EB5E28 */
 }
 
 #tray {
-  background: rgba(64, 61, 57, 1.0);
-  margin-left: 0.2em;
+  margin-left: 0em;
   margin-right: 0em;
   padding-left: 0.3em;
-  padding-right: 0.5em;
+  padding-right: 0.3em;
   border-radius: 1em;
 
-  /* For the menus. */
-  font-family: "Roboto Mono", "Font Awesome", Arial, sans-serif;
+  background-color: rgba(64, 61, 57, 1.0);  /* #403D39 */
+}
+
+#tray menu {
   font-size: medium;
-  font-stretch: condensed;
-  font-weight: bold;
+
+  background-color: rgba(37, 36, 34, 1.0);  /* #252422 */
+  color: rgba(255, 252, 242, 1.0);  /* #FFFCF2 */
+}
+
+#tray menuitem:hover {
+  background-color: rgba(235, 94, 40, 1.0);  /* #EB5E28 */
+  color: rgba(255, 252, 242, 1.0);  /* #FFFCF2 */
 }
 
 #battery,
@@ -95,24 +109,24 @@ window#waybar {
 #memory,
 #network,
 #pulseaudio {
-  padding-left: 1em;
-  padding-right: 1em;
+  border-radius: 1em;
   margin-left: 0.2em;
   margin-right: 0.2em;
-  border-radius: 1em;
-  color: rgba(255, 252, 242, 1.0);
-  background: rgba(64, 61, 57, 1.0);
-  font-weight: 600;
+  padding-left: 1em;
+  padding-right: 1em;
+
+  background-color: rgba(64, 61, 57, 1.0);  /* #403D39 */
+  color: rgba(255, 252, 242, 1.0);  /* #FFFCF2 */
 }
 
 #pulseaudio.muted {
-  background: rgba(255, 0, 0, 0.2);
+  background-color: rgba(255, 0, 0, 0.2);  /* #FF0000 */
 }
 
 #battery.charging {
-  background: rgba(0, 255, 0, 0.1);
+  background-color: rgba(0, 255, 0, 0.1);  /* #00FF00 */
 }
 
 #battery.warning:not(.charging) {
-  background: #b43030;
+  background-color: rgba(255, 0, 0, 0.2);  /* #FF0000 */
 }
