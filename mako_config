@@ -7,6 +7,8 @@ max-icon-size=32
 anchor=bottom-right
 text-alignment=center
 
+font=Roboto Mono 10
+
 # Color palette: https://coolors.co/fffcf2-ccc5b9-403d39-252422-eb5e28
 background-color=#252422AA
 text-color=#FFFCF2AA
