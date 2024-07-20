@@ -125,8 +125,6 @@
       # slurp # screenshot functionality
       wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
       mako # notification system developed by swaywm maintainer
-      swaylock
-      imagemagick_light
       kitty
       jq
       pavucontrol
@@ -134,6 +132,7 @@
       bluetuith
       bemenu
       swaybg
+      hyprlock
 
       python3
       brave

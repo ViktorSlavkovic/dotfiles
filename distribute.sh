@@ -29,12 +29,14 @@ fi
 
 chmod u+x "${script_dir}"/*.{sh,py}
 
+mkdir -p "${HOME}/.config/hypr"
 mkdir -p "${HOME}/.config/kitty"
 mkdir -p "${HOME}/.config/mako"
 mkdir -p "${HOME}/.config/sway"
 mkdir -p "${HOME}/.config/terminator"
 mkdir -p "${HOME}/.config/tmux"
 mkdir -p "${HOME}/.config/waybar"
+ln -sf "${script_dir}/hyprlock.conf"      "${HOME}/.config/hypr/hyprlock.conf"
 ln -sf "${script_dir}/kitty.conf"         "${HOME}/.config/kitty/kitty.conf"
 ln -sf "${script_dir}/mako.conf"          "${HOME}/.config/mako/config"
 ln -sf "${script_dir}/sway.conf"          "${HOME}/.config/sway/config"

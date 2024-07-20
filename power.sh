@@ -20,26 +20,11 @@ function print_usage_and_die() {
   echo "                                                                                "
   echo "This script merges lock screen and power controls under one command that's easy "
   echo "to invoke from display managers/menus.                                          "
-  echo "For locking, it grabs a screenshot of each screen, blurs it and uses that as the"
-  echo "lockscreen background for that screen.                                          "
   echo "                                                                                "
   echo "Copyright (c) 2024 Viktor Slavkovic                                             "
   echo "Licensed under the Apache License, Version 2.0                                  "
   echo "                                                                                "
   exit 1
-}
-
-function lock_screen() {
-  local spec=""
-  for out in $(swaymsg -t get_outputs | jq -r '.[].name'); do
-    local raw="/tmp/scrot-raw-${out}.jpeg"
-    local blur="/tmp/scrot-blur-${out}.jpeg"
-    grim -t jpeg -o "${out}" "${raw}"
-    convert "${raw}" -scale 2.5% -scale 4000% "${blur}"
-    rm "${raw}"
-    spec="${spec} --image=${out}:${blur}"
-  done
-  swaylock -f ${spec}
 }
 
 function main() {
@@ -55,17 +40,17 @@ function main() {
       systemctl reboot
       ;;
     SLEEP)
-      lock_screen &
+      hyprlock --immediate
       sleep 3s
       systemctl suspend
       ;;
     HIBERNATE)
-      lock_screen &
+      hyprlock --immediate
       sleep 3s
       systemctl hibernate
       ;;
     LOCK)
-      lock_screen &
+      hyprlock
       ;;
     LOGOUT)
       swaymsg exit

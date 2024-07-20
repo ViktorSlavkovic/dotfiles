@@ -352,6 +352,7 @@ EOM
     grim                   \
     grub                   \
     gthumb                 \
+    hyprlock               \
     imagemagick            \
     intel-media-driver     \
     jq                     \
