@@ -87,7 +87,7 @@ window#waybar {
 #language,
 #memory,
 #network,
-#pulseaudio {
+#wireplumber {
   border-radius: 1em;
   margin-left: 0.2em;
   margin-right: 0.2em;
@@ -102,7 +102,7 @@ window#waybar {
 #bluetooth.disabled,
 #bluetooth.off,
 #network.disconnected,
-#pulseaudio.muted {
+#wireplumber.muted {
   background-color: rgba(255, 0, 0, 0.2);  /* #FF0000 */
 }
 

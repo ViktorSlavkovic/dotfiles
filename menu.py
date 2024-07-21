@@ -15,11 +15,12 @@
 # limitations under the License.
 
 import os
+import re
 import subprocess
 import sys
 
 _USAGE = '''
-Usage: menu (RUN|POWER|WIFI|BLUETOOTH)
+Usage: menu (RUN|POWER|WIFI|BLUETOOTH|AUDIOSINK)
 
 This script merges multiple menu implementations in one place for running
 simplicity, code sharing and coherent styling.
@@ -48,6 +49,8 @@ _BEMENU_COMMON_ARGS = [
 
 _POWER_PATH = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'power.sh')
+
+_WPCTL_SINK_PATTERN_RE = re.compile(r'^(\*?)\s*(\d+)\.\s*(.+?)\s*\[[^\]]*\]$')
 
 
 def _launch_noexec_bemenu(options: list[str], w: float = 0.1) -> str:
@@ -113,7 +116,7 @@ def _human_wifi(net: dict[str, any], idx: int) -> str:
 
 
 def wifi_menu():
-  '''Handles the WiFi mode.'''
+  '''Handles the WIFI mode.'''
   # First make sure WiFi is enabled. Well, increase chances.
   # TODO: Notify on errors.
   subprocess.Popen(['nmcli', 'radio', 'wifi', 'on']).communicate()
@@ -137,6 +140,60 @@ def bluetooth_menu():
   os.execvp(cmd[0], cmd)
 
 
+def _list_wp_sinks():
+  out, _ = subprocess.Popen(
+      ['wpctl', 'status'],
+      stdout=subprocess.PIPE,
+  ).communicate()
+  # TODO: Switch to a saner way to parse this once wpctl provides it:
+  #       https://gitlab.freedesktop.org/pipewire/wireplumber/-/issues/636
+  lines = [l.strip() for l in out.decode().splitlines()]
+  sink_lines = []
+  in_sink_lines = False
+  for l in lines:
+    if l.startswith('├─ Sinks:'):
+      in_sink_lines = True
+      continue
+    if in_sink_lines and l.startswith('├─'):
+      break
+    if not in_sink_lines:
+      continue
+    l = l.removeprefix('│').strip()
+    if not l:
+      continue
+    match = _WPCTL_SINK_PATTERN_RE.match(l)
+    if not match or match[0] != l:
+      print("ERROR: Expected full match.", file=sys.stderr)
+      sys.exit(1)
+    curr = {
+        'connected': bool(match[1]),
+        'id': int(match[2]),
+        'name': match[3].strip(),
+    }
+    sink_lines.append(curr)
+  return sorted(sink_lines, key=lambda x: x['name'])
+
+
+def _human_wp_sink(sink: dict[str, any], idx: int) -> str:
+  con = {True: '>', False: ' '}[sink['connected']]
+  name = sink['name'][:98].ljust(98)
+  return f'{con} {name} [{idx}]'
+
+
+def wp_sink_menu():
+  '''Handles the AUDIOSINK mode.'''
+  # Fetch sinks and display the menu.
+  sinks = _list_wp_sinks()
+  options = [_human_wp_sink(s, i) for i, s in enumerate(sinks)]
+  pick = _launch_noexec_bemenu(options, 0.5)
+  if not pick:
+    return
+  sink_id = sinks[int(
+      pick.split()[-1].removeprefix('[').removesuffix(']'))]['id']
+  cmd = ['wpctl', 'set-default', str(sink_id)]
+  os.execvp(cmd[0], cmd)
+
+
 def main():
   if len(sys.argv) != 2:
     print(_USAGE, file=sys.stderr)
@@ -154,6 +211,9 @@ def main():
       return
     case 'BLUETOOTH':
       bluetooth_menu()
+      return
+    case 'AUDIOSINK':
+      wp_sink_menu()
       return
     case _:
       print(_USAGE, file=sys.stderr)

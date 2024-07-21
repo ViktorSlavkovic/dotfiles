@@ -1,7 +1,7 @@
 {
     "layer": "bottom",
     "modules-center": ["sway/workspaces", "sway/mode"],
-    "modules-right": ["disk", "memory", "cpu", "network", "bluetooth", "pulseaudio", "battery", "sway/language", "tray"],
+    "modules-right": ["disk", "memory", "cpu", "network", "bluetooth", "wireplumber", "battery", "sway/language", "tray"],
     "modules-left": ["clock", "clock#mtv", "clock#nyc", "clock#lon", "clock#srb"],
 
     "battery": {
@@ -62,16 +62,17 @@
     "bluetooth": {
         "format": " {status}",
         "format-connected": " {device_alias}",
-        "format-connected-battery": " {device_alias} ({device_battery_percentage}%)",
+        "format-connected-battery": " ({device_battery_percentage}%) {device_alias}",
+        "max-length": 20,
         "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
         "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
         "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
         "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%",
         "on-click": "~/configs/menu.py BLUETOOTH"
     },
-    "pulseaudio": {
-        "format": "{volume}% {icon}",
-        "format-bluetooth": "{volume}% {icon}",
+    "wireplumber": {
+        "format": "{icon} ({volume}%) {node_name}",
+        "max-length": 20,
         "format-muted": "🔇",
         "format-icons": {
             "headphone": "🎧",
@@ -82,7 +83,6 @@
             "car": "🏎",
             "default": ["🔈", "🔉", "🔊"]
         },
-        "scroll-step": 1,
         "on-click": "pavucontrol"
     },
     "tray": {
