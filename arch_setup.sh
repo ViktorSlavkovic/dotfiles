@@ -338,7 +338,6 @@ EOM
     base                   \
     base-devel             \
     bemenu                 \
-    blueman                \
     bluez                  \
     bluez-utils            \
     docker                 \
@@ -696,6 +695,7 @@ EOM
 
   LOG INFO "Installing extra stuff with yay..."
   yay -S --noconfirm       \
+    bluetuith              \
     brave-bin              \
     light                  \
     udevil                 \

@@ -19,7 +19,7 @@ import subprocess
 import sys
 
 _USAGE = '''
-Usage: menu (RUN|POWER|WIFI)
+Usage: menu (RUN|POWER|WIFI|BLUETOOTH)
 
 This script merges multiple menu implementations in one place for running
 simplicity, code sharing and coherent styling.
@@ -130,6 +130,13 @@ def wifi_menu():
   os.execvp(cmd[0], cmd)
 
 
+def bluetooth_menu():
+  '''Handles the bluetooth mode.'''
+  # TODO: Switch to something bemenu-based.
+  cmd = ['kitty', '--hold', '--start-as', 'fullscreen', 'bluetuith']
+  os.execvp(cmd[0], cmd)
+
+
 def main():
   if len(sys.argv) != 2:
     print(_USAGE, file=sys.stderr)
@@ -144,6 +151,9 @@ def main():
       return
     case 'WIFI':
       wifi_menu()
+      return
+    case 'BLUETOOTH':
+      bluetooth_menu()
       return
     case _:
       print(_USAGE, file=sys.stderr)

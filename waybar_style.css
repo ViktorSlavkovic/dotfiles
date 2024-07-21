@@ -80,6 +80,37 @@ window#waybar {
   color: rgba(235, 94, 40, 1.0);  /* #EB5E28 */
 }
 
+#battery,
+#bluetooth,
+#cpu,
+#disk,
+#language,
+#memory,
+#network,
+#pulseaudio {
+  border-radius: 1em;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+  padding-left: 1em;
+  padding-right: 1em;
+
+  background-color: rgba(64, 61, 57, 1.0);  /* #403D39 */
+  color: rgba(255, 252, 242, 1.0);  /* #FFFCF2 */
+}
+
+#battery.warning:not(.charging),
+#bluetooth.disabled,
+#bluetooth.off,
+#network.disconnected,
+#pulseaudio.muted {
+  background-color: rgba(255, 0, 0, 0.2);  /* #FF0000 */
+}
+
+#battery.charging,
+#bluetooth.connected {
+  background-color: rgba(0, 255, 0, 0.1);  /* #00FF00 */
+}
+
 #tray {
   margin-left: 0em;
   margin-right: 0em;
@@ -100,33 +131,4 @@ window#waybar {
 #tray menuitem:hover {
   background-color: rgba(235, 94, 40, 1.0);  /* #EB5E28 */
   color: rgba(255, 252, 242, 1.0);  /* #FFFCF2 */
-}
-
-#battery,
-#cpu,
-#disk,
-#language,
-#memory,
-#network,
-#pulseaudio {
-  border-radius: 1em;
-  margin-left: 0.2em;
-  margin-right: 0.2em;
-  padding-left: 1em;
-  padding-right: 1em;
-
-  background-color: rgba(64, 61, 57, 1.0);  /* #403D39 */
-  color: rgba(255, 252, 242, 1.0);  /* #FFFCF2 */
-}
-
-#pulseaudio.muted {
-  background-color: rgba(255, 0, 0, 0.2);  /* #FF0000 */
-}
-
-#battery.charging {
-  background-color: rgba(0, 255, 0, 0.1);  /* #00FF00 */
-}
-
-#battery.warning:not(.charging) {
-  background-color: rgba(255, 0, 0, 0.2);  /* #FF0000 */
 }
