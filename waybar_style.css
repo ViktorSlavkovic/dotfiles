@@ -41,7 +41,7 @@ window#waybar {
   padding-left: 0.2em;
   padding-right: 0.2em;
 
-  background-color: rgba(235, 94, 40, 0.7);  /* #EB5E28 */
+  background: rgba(235, 94, 40, 0.7);  /* #EB5E28 */
   color: rgba(255, 252, 242, 0.7);  /* #FFFCF2 */
 }
 
@@ -51,7 +51,7 @@ window#waybar {
   padding-left: 0.2em;
   padding-right: 0.2em;
 
-  background-color: rgba(235, 94, 40, 1.0);  /* #EB5E28 */
+  background: rgba(235, 94, 40, 1.0);  /* #EB5E28 */
   color: rgba(255, 252, 242, 1.0);  /* #FFFCF2 */
 }
 
