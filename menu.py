@@ -105,11 +105,11 @@ def _list_wifi():
 
 def _human_wifi(net: dict[str, any], idx: int) -> str:
   con = {True: '>', False: ' '}[net['connected']]
-  ssid = net['ssid'][:20].ljust(20)
+  ssid = net['ssid'][:13].ljust(13)
   chan = str(net['chan']).rjust(4)
   chan = f'C {chan}'
   bars = net['bars'].rjust(4)
-  sec = net['sec'].strip().ljust(20)
+  sec = net['sec'].strip().ljust(10)
   if sec:
     sec = f'S {sec}'
   return f'{con} {bars} {ssid} {chan} {sec} [{idx}]'
@@ -176,7 +176,7 @@ def _list_wp_sinks():
 
 def _human_wp_sink(sink: dict[str, any], idx: int) -> str:
   con = {True: '>', False: ' '}[sink['connected']]
-  name = sink['name'][:98].ljust(98)
+  name = sink['name'][:72].ljust(72)
   return f'{con} {name} [{idx}]'
 
 
