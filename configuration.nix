@@ -126,7 +126,6 @@
       mako # notification system developed by swaywm maintainer
       kitty
       jq
-      pavucontrol
       bluetuith
       bemenu
       swaybg

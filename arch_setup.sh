@@ -368,7 +368,6 @@ EOM
     ntfs-3g                \
     ntp                    \
     openssh                \
-    pavucontrol            \
     pulseaudio             \
     pulseaudio-alsa        \
     pulseaudio-bluetooth   \
@@ -394,6 +393,7 @@ EOM
     vulkan-intel           \
     vulkan-tools           \
     waybar                 \
+    wireplumber            \
     xorg-xwayland
 
   if [ "$?" == "0" ]; then

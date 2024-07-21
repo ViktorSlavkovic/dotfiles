@@ -83,7 +83,7 @@
             "car": "🏎",
             "default": ["🔈", "🔉", "🔊"]
         },
-        "on-click": "pavucontrol"
+        "on-click": "~/configs/menu.py AUDIOSINK"
     },
     "tray": {
         "icon-size": 15,
