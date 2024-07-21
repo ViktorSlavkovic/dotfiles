@@ -52,4 +52,3 @@ if [[ -f "${HOME}/.bashrc" ]]; then
     echo >> "${HOME}/.bashrc"
   fi
 fi
-

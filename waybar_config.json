@@ -56,7 +56,8 @@
     "network": {
         "format-wifi": "{ifname}::{ipaddr}::{essid} ({signalStrength}%) ",
         "format-ethernet": "{ifname}::{ipaddr}/{cidr} ",
-        "format-disconnected": "Disconnected ⚠"
+        "format-disconnected": "Disconnected ⚠",
+        "on-click": "~/configs/menu.py WIFI"
     },
     "pulseaudio": {
         "format": "{volume}% {icon}",

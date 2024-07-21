@@ -364,7 +364,6 @@ EOM
     man-db                 \
     mesa                   \
     networkmanager         \
-    network-manager-applet \
     noto-fonts             \
     noto-fonts-emoji       \
     ntfs-3g                \

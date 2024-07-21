@@ -128,7 +128,6 @@
       kitty
       jq
       pavucontrol
-      networkmanagerapplet
       bluetuith
       bemenu
       swaybg
@@ -172,7 +171,7 @@
   # security.sudo.enable = true;
   # security.sudo.wheelNeedsPassword = false;
 
-  security.pam.services.swaylock.fprintAuth = false;
+  security.pam.services.hyprlock = {};
 
   programs.light.enable = true;
   programs.waybar.enable = true;
