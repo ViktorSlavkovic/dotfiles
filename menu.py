@@ -40,6 +40,7 @@ _BEMENU_COMMON_ARGS = [
     '--border-radius', '0',
     # Palette: https://coolors.co/fffcf2-ccc5b9-403d39-252422-eb5e28
     '--bdr', '#252422R',
+    '--tb', '#403d39', '--tf', '#fffcf2',
     '--nb', '#403d39', '--nf', '#fffcf2',
     '--ab', '#403d39', '--af', '#fffcf2',
     '--fb', '#fffcf2', '--ff', '#252422',
@@ -53,12 +54,17 @@ _POWER_PATH = os.path.join(os.path.dirname(
 _WPCTL_SINK_PATTERN_RE = re.compile(r'^(\*?)\s*(\d+)\.\s*(.+?)\s*\[[^\]]*\]$')
 
 
-def _launch_noexec_bemenu(options: list[str], w: float = 0.1) -> str:
+def _launch_noexec_bemenu(options: list[str], w: float = 0.1, password: bool = False) -> str:
   args = list(_BEMENU_COMMON_ARGS)
   args.extend([
       '--no-exec',
       '-W', str(w),
   ])
+  if password:
+    args.extend([
+        '--prompt', '🔑',
+        '--password', 'indicator',
+    ])
   picked, _ = subprocess.Popen(
       ['bemenu'] + args,
       stdin=subprocess.PIPE,
@@ -119,18 +125,23 @@ def wifi_menu():
   '''Handles the WIFI mode.'''
   # First make sure WiFi is enabled. Well, increase chances.
   # TODO: Notify on errors.
-  subprocess.Popen(['nmcli', 'radio', 'wifi', 'on']).communicate()
+  subprocess.run(['nmcli', 'radio', 'wifi', 'on'])
 
   # Scan and display the menu.
   networks = _list_wifi()
   options = [_human_wifi(n, i) for i, n in enumerate(networks)]
-  pick = _launch_noexec_bemenu(options, 0.3)
+  pick = _launch_noexec_bemenu(options, w=0.3)
   if not pick:
     return
   ssid = networks[int(
       pick.split()[-1].removeprefix('[').removesuffix(']'))]['ssid']
+
   cmd = ['nmcli', 'd', 'wifi', 'connect', ssid]
-  os.execvp(cmd[0], cmd)
+  result = subprocess.run(cmd)
+  if result.returncode == 4:
+    password = _launch_noexec_bemenu([], w=0.3, password=True)
+    cmd.extend(['password', password])
+    result = subprocess.run(cmd)
 
 
 def bluetooth_menu():
@@ -185,7 +196,7 @@ def wp_sink_menu():
   # Fetch sinks and display the menu.
   sinks = _list_wp_sinks()
   options = [_human_wp_sink(s, i) for i, s in enumerate(sinks)]
-  pick = _launch_noexec_bemenu(options, 0.5)
+  pick = _launch_noexec_bemenu(options, w=0.5)
   if not pick:
     return
   sink_id = sinks[int(
