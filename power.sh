@@ -53,7 +53,7 @@ function main() {
       hyprlock --immediate
       ;;
     LOGOUT)
-      swaymsg exit
+      loginctl terminate-session ""
       ;;
     *)
       print_usage_and_die
